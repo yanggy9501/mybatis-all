@@ -15,23 +15,26 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
-import java.util.List;
-
-import org.apache.ibatis.reflection.ExceptionUtil;
-import org.apache.ibatis.reflection.MetaClass;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.ReflectionException;
-import org.apache.ibatis.reflection.SystemMetaObject;
+import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+
+import java.util.List;
 
 /**
  * @author Clinton Begin
  */
 public class BeanWrapper extends BaseWrapper {
 
+  /**
+   * 原始对象
+   */
   private final Object object;
+
+  /**
+   * class 的元素数据
+   */
   private final MetaClass metaClass;
 
   public BeanWrapper(MetaObject metaObject, Object object) {

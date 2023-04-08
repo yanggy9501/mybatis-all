@@ -1,4 +1,4 @@
-package com.mybatis.demo.test;
+package com.mybatis.demo;
 
 import com.mybatis.demo.entity.User;
 import org.apache.ibatis.io.Resources;

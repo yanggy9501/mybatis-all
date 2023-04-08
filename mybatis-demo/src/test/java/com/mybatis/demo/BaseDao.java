@@ -16,8 +16,6 @@ import java.util.Properties;
 
 /**
  * 数据访问基类
- * 
- * @author Administrator
  *
  */
 public class BaseDao {

@@ -15,18 +15,6 @@
  */
 package org.apache.ibatis.session;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.function.BiFunction;
-
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
@@ -42,11 +30,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
 import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
-import org.apache.ibatis.executor.BatchExecutor;
-import org.apache.ibatis.executor.CachingExecutor;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.ReuseExecutor;
-import org.apache.ibatis.executor.SimpleExecutor;
+import org.apache.ibatis.executor.*;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
@@ -66,13 +50,7 @@ import org.apache.ibatis.logging.log4j2.Log4j2Impl;
 import org.apache.ibatis.logging.nologging.NoLoggingImpl;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMap;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.InterceptorChain;
@@ -95,6 +73,9 @@ import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
+import java.util.*;
+import java.util.function.BiFunction;
+
 /**
  * @author Clinton Begin
  */
@@ -104,9 +85,15 @@ public class Configuration {
 
   protected boolean safeRowBoundsEnabled;
   protected boolean safeResultHandlerEnabled = true;
+  /**
+   * 下划线转驼峰命名：默认 false
+   */
   protected boolean mapUnderscoreToCamelCase;
   protected boolean aggressiveLazyLoading;
   protected boolean multipleResultSetsEnabled = true;
+  /**
+   * 主键是否自动生成：默认 ture
+   */
   protected boolean useGeneratedKeys;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
@@ -114,9 +101,20 @@ public class Configuration {
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
 
+  /**
+   * 日志前缀
+   */
   protected String logPrefix;
+
+  /**
+   * 日志实现
+   */
   protected Class<? extends Log> logImpl;
   protected Class<? extends VFS> vfsImpl;
+
+  /**
+   * 本地缓存的范围：默认 session
+   */
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
@@ -127,6 +125,9 @@ public class Configuration {
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
 
+  /**
+   * 所有 properties 配置（文件 + xml标签配置）的k-v
+   */
   protected Properties variables = new Properties();
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
@@ -144,10 +145,24 @@ public class Configuration {
    */
   protected Class<?> configurationFactory;
 
+  /**
+   * mapper 注册器，注册mapper
+   */
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+
+  /**
+   * 插件的链
+   */
   protected final InterceptorChain interceptorChain = new InterceptorChain();
+
+  /**
+   * 类型转换器的注册器
+   */
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
-  // 类型别名注册器 TypeAliasRegistry构造函数会注册一些， Configuration构造函数会注册一些
+
+  /**
+   * 类型别名注册器，TypeAliasRegistry构造函数会注册一些， Configuration构造函数会注册一些
+   */
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 

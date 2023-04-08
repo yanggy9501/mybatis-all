@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.builder.xml;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.Properties;
-import javax.sql.DataSource;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.datasource.DataSourceFactory;
@@ -38,13 +33,14 @@ import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.ReflectorFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
-import org.apache.ibatis.session.AutoMappingBehavior;
-import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.LocalCacheScope;
+import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
+
+import javax.sql.DataSource;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.Properties;
 
 /**
  * @author Clinton Begin
@@ -113,21 +109,20 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public Configuration parse() {
-    /**
+    /*
      * 若已经解析过了 就抛出异常
      */
     if (parsed) {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
-    /**
+    /*
      * 设置解析标志位
      */
     parsed = true;
-    /**
+    /*
      * 解析我们的mybatis-config.xml的
      * 节点
      * <configuration>
-     *
      *
      * </configuration>
      */
@@ -137,6 +132,8 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   /**
    * 方法实现说明:解析我们mybatis-config.xml的 configuration节点
+   * 顺序解析xml的标签 --> xml 的标签位置不能的乱序
+   *
    * @author:xsls
    * @param root:configuration节点对象
    * @return:
@@ -145,14 +142,14 @@ public class XMLConfigBuilder extends BaseBuilder {
    */
   private void parseConfiguration(XNode root) {
     try {
-      /**
+      /*
        * 解析 properties节点
        *     <properties resource="mybatis/db.properties" />
        *     解析到org.apache.ibatis.parsing.XPathParser#variables
        *           org.apache.ibatis.session.Configuration#variables
        */
       propertiesElement(root.evalNode("properties"));
-      /**
+      /*
        * 解析我们的mybatis-config.xml中的settings节点
        * 具体可以配置哪些属性:http://www.mybatis.org/mybatis-3/zh/configuration.html#settings
        * <settings>
@@ -166,20 +163,20 @@ public class XMLConfigBuilder extends BaseBuilder {
        *
        */
       Properties settings = settingsAsProperties(root.evalNode("settings"));
-      /**
+      /*
        * 基本没有用过该属性
        * VFS含义是虚拟文件系统；主要是通过程序能够方便读取本地文件系统、FTP文件系统等系统中的文件资源。
          Mybatis中提供了VFS这个配置，主要是通过该配置可以加载自定义的虚拟文件系统应用程序
          解析到：org.apache.ibatis.session.Configuration#vfsImpl
        */
       loadCustomVfs(settings);
-      /**
+      /*
        * 指定 MyBatis 所用日志的具体实现，未指定时将自动查找。
        * SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
        * 解析到org.apache.ibatis.session.Configuration#logImpl
        */
       loadCustomLogImpl(settings);
-      /**
+      /*
        * 解析我们的别名
        * <typeAliases>
            <typeAlias alias="Author" type="cn.tulingxueyuan.pojo.Author"/>
@@ -191,7 +188,7 @@ public class XMLConfigBuilder extends BaseBuilder {
        除了自定义的，还有内置的
        */
       typeAliasesElement(root.evalNode("typeAliases"));
-      /**
+      /*
        * 解析我们的插件(比如分页插件)
        * mybatis自带的
        * Executor (update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)
@@ -202,7 +199,7 @@ public class XMLConfigBuilder extends BaseBuilder {
        */
       pluginElement(root.evalNode("plugins"));
 
-      /**
+      /*
        * 可以配置  一般不会去设置
        * 对象工厂 用于反射实例化对象、对象包装工厂、
        * 反射工厂 用于属性和setter/getter 获取
@@ -214,7 +211,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       // 设置settings 和默认值到configuration
       settingsElement(settings);
 
-      /**
+      /*
        * 解析我们的mybatis环境
          <environments default="dev">
            <environment id="dev">

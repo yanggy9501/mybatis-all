@@ -6,12 +6,14 @@ import org.apache.ibatis.executor.ReuseExecutor;
 import org.apache.ibatis.executor.SimpleExecutor;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.*;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.Transaction;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -19,10 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/***
- * @Author 徐庶   QQ:1092002729
- * @Slogan 致敬大师，致敬未来的你
- */
 public class ExcutorTest {
     SqlSessionFactory sqlSessionFactory;
     Configuration configuration;

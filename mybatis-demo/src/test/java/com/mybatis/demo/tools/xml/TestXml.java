@@ -1,19 +1,17 @@
-package com.mybatis.demo.xml;
+package com.mybatis.demo.tools.xml;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.parsing.PropertyParser;
-import org.apache.ibatis.parsing.XNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,16 +20,11 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Properties;
 
-/***
- * @Author 徐庶   QQ:1092002729
- * @Slogan 致敬大师，致敬未来的你
- */
+@Slf4j
 public class TestXml {
 
     Document document;

@@ -17,8 +17,10 @@ CREATE TABLE `user` (
 public class User implements Serializable{
 
     private Long id ;
-    private String username ;
+    public String username ;
     private Date createTime;
+
+    private Dept dept;
 
 
     public Long getId() {
@@ -45,13 +47,21 @@ public class User implements Serializable{
         this.createTime = createTime;
     }
 
+    public Dept getDept() {
+        return dept;
+    }
+
+    public void setDept(Dept dept) {
+        this.dept = dept;
+    }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", userName='" + username + '\'' +
-                ", createTime=" + createTime +
-                '}';
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", createTime=" + createTime +
+            ", dept=" + dept +
+            '}';
     }
 }

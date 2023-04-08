@@ -15,22 +15,13 @@
  */
 package org.apache.ibatis.type;
 
+import org.apache.ibatis.io.ResolverUtil;
+import org.apache.ibatis.io.Resources;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.ibatis.io.ResolverUtil;
-import org.apache.ibatis.io.Resources;
+import java.util.*;
 
 /**
  * @author Clinton Begin
@@ -38,8 +29,9 @@ import org.apache.ibatis.io.Resources;
 public class TypeAliasRegistry {
 
   /**
-   * 用于保存我们自定义的别名映射
-   * <employee,com.tuling.entity.Employee>
+   * 别名注册规则，注册别名就是往map中添加
+   * key：别名
+   * value：类名
    */
   private final Map<String, Class<?>> typeAliases = new HashMap<>();
 
@@ -141,11 +133,13 @@ public class TypeAliasRegistry {
 
   public void registerAliases(String packageName, Class<?> superType) {
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
+    // 找到所有的Object的子类
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
     Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
     for (Class<?> type : typeSet) {
       // Ignore inner classes and interfaces (including package-info.java)
       // Skip also inner classes. See issue #6
+      // 不是匿名类 | 不是接口 | 不是内部类 则注册
       if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
         registerAlias(type);
       }
@@ -167,6 +161,7 @@ public class TypeAliasRegistry {
       throw new TypeException("The parameter alias cannot be null");
     }
     // issue #748
+    // 首字母小写，即使传递的是大写也会被处理
     String key = alias.toLowerCase(Locale.ENGLISH);
     if (typeAliases.containsKey(key) && typeAliases.get(key) != null && !typeAliases.get(key).equals(value)) {
       throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(key).getName() + "'.");

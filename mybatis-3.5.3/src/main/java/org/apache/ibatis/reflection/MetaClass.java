@@ -15,23 +15,30 @@
  */
 package org.apache.ibatis.reflection;
 
+import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
+import org.apache.ibatis.reflection.invoker.Invoker;
+import org.apache.ibatis.reflection.invoker.MethodInvoker;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
-import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
-import org.apache.ibatis.reflection.invoker.Invoker;
-import org.apache.ibatis.reflection.invoker.MethodInvoker;
-import org.apache.ibatis.reflection.property.PropertyTokenizer;
-
 /**
  * @author Clinton Begin
  */
 public class MetaClass {
 
+  /**
+   * 反射工厂
+   */
   private final ReflectorFactory reflectorFactory;
+
+  /**
+   * 反射器
+   */
   private final Reflector reflector;
 
   private MetaClass(Class<?> type, ReflectorFactory reflectorFactory) {

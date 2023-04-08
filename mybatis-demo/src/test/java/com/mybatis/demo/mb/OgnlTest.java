@@ -4,10 +4,6 @@ import com.mybatis.demo.entity.User;
 import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
 import org.junit.Test;
 
-/***
- * @Author 徐庶   QQ:1092002729
- * @Slogan 致敬大师，致敬未来的你
- */
 public class OgnlTest {
 
     @Test

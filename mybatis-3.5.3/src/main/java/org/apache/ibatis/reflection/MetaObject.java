@@ -15,27 +15,42 @@
  */
 package org.apache.ibatis.reflection;
 
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.wrapper.*;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.reflection.property.PropertyTokenizer;
-import org.apache.ibatis.reflection.wrapper.BeanWrapper;
-import org.apache.ibatis.reflection.wrapper.CollectionWrapper;
-import org.apache.ibatis.reflection.wrapper.MapWrapper;
-import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
-import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 /**
  * @author Clinton Begin
  */
 public class MetaObject {
 
+  /**
+   * 原始对象
+   */
   private final Object originalObject;
+
+  /**
+   * 原始对象被包装后的对象
+   */
   private final ObjectWrapper objectWrapper;
+
+  /**
+   * 用来实例化对象的工厂
+   */
   private final ObjectFactory objectFactory;
+
+  /**
+   * 用来获取一个包装对象的工厂，给外部扩展使用
+   */
   private final ObjectWrapperFactory objectWrapperFactory;
+
+  /**
+   * 可以为每一个类生成Reflector，提供了反射的基本操作
+   */
   private final ReflectorFactory reflectorFactory;
 
   private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
@@ -43,11 +58,13 @@ public class MetaObject {
     this.objectFactory = objectFactory;
     this.objectWrapperFactory = objectWrapperFactory;
     this.reflectorFactory = reflectorFactory;
-
+    // 1. 不包装
     if (object instanceof ObjectWrapper) {
       this.objectWrapper = (ObjectWrapper) object;
+      // 工厂进行包装
     } else if (objectWrapperFactory.hasWrapperFor(object)) {
       this.objectWrapper = objectWrapperFactory.getWrapperFor(this, object);
+     // 框架自行包装
     } else if (object instanceof Map) {
       this.objectWrapper = new MapWrapper(this, (Map) object);
     } else if (object instanceof Collection) {
@@ -124,19 +141,26 @@ public class MetaObject {
   }
 
   public void setValue(String name, Object value) {
+    // 迭代器设计模式
     PropertyTokenizer prop = new PropertyTokenizer(name);
+    // 如是非简单的属性，如：dept.deptName
     if (prop.hasNext()) {
+      // 如果dept为空的，先进行实例化dept
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        // 如果 value == null，不需要实例化子属性
         if (value == null) {
           // don't instantiate child path if value is null
           return;
         } else {
+          // 实例化
           metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
         }
       }
+      // 赋值
       metaValue.setValue(prop.getChildren(), value);
     } else {
+      // 简单属性的赋值
       objectWrapper.set(prop, value);
     }
   }

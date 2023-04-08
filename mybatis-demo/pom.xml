@@ -16,7 +16,21 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>3.5.3-xsls</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ognl</groupId>
+                    <artifactId>ognl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <!-- ognl -->
+        <dependency>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+            <version>3.3.4</version>
+        </dependency>
+
         <!-- mysql驱动 -->
         <dependency>
             <groupId>mysql</groupId>
@@ -44,6 +58,12 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.type;
 
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.apache.ibatis.io.ResolverUtil;
+import org.apache.ibatis.io.Resources;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
@@ -22,30 +26,11 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.chrono.JapaneseDate;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.ibatis.binding.MapperMethod.ParamMap;
-import org.apache.ibatis.io.ResolverUtil;
-import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
@@ -53,9 +38,29 @@ import org.apache.ibatis.io.Resources;
  */
 public final class TypeHandlerRegistry {
 
+  /**
+   * 数据库数据类型对应的 TypeHandler
+   */
   private final Map<JdbcType, TypeHandler<?>>  jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
+
+  /**
+   * Java 类型对应的 TypeHandler
+   * key（Type）：Java 的类型
+   * value（Map<JdbcType, TypeHandler<?>>）：jdbcTypeHandlerMap
+   * 即 数据库类型中就会很多中如 char varchar text 就能和 java String 匹配。
+   * 如果拿不到 JdbcType （没写） 也是可以了，根据目标的 java 类型就可以了（获取 map 的第一个）
+   * 即：有精确的使用精确的，没有则取一个
+   */
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
+
+  /**
+   * 兜底方案：转成 Object
+   */
   private final TypeHandler<Object> unknownTypeHandler = new UnknownTypeHandler(this);
+
+  /**
+   * 所有的类型转换器（缓存所有）
+   */
   private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
@@ -377,6 +382,7 @@ public final class TypeHandlerRegistry {
         map = new HashMap<>();
         typeHandlerMap.put(javaType, map);
       }
+      // 同一个 JavaType 可以对应多个 JdbcType
       map.put(jdbcType, handler);
     }
     allTypeHandlersMap.put(handler.getClass(), handler);
