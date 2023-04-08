@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.mapping;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -28,7 +24,13 @@ import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
+ * mapper.xml 文件封装
+ *
  * @author Clinton Begin
  */
 public final class MappedStatement {
@@ -36,6 +38,9 @@ public final class MappedStatement {
   private String resource;//mapper配置文件名，如：UserMapper.xml
   private Configuration configuration;//全局配置
   private String id;//节点的id属性加命名空间,如：com.lucky.mybatis.dao.UserMapper.selectByExample
+  /**
+   * 每次从服务器获取的数量
+   */
   private Integer fetchSize;
   private Integer timeout;//超时时间
   private StatementType statementType;//操作SQL的对象的类型
@@ -49,7 +54,7 @@ public final class MappedStatement {
   private boolean resultOrdered;//结果是否排序
   private SqlCommandType sqlCommandType;//sql语句的类型，如select、update、delete、insert
   private KeyGenerator keyGenerator;
-  private String[] keyProperties;
+  private String[] keyProperties;// 主键生成器
   private String[] keyColumns;
   private boolean hasNestedResultMaps;
   private String databaseId;//数据库ID

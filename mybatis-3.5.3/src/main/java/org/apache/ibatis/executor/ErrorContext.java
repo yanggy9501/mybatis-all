@@ -23,11 +23,26 @@ public class ErrorContext {
   private static final String LINE_SEPARATOR = System.getProperty("line.separator","\n");
   private static final ThreadLocal<ErrorContext> LOCAL = new ThreadLocal<>();
 
+  /**
+   * 异常存储，其内部又可以存储（存储每个环节的异常），形成链式
+   */
   private ErrorContext stored;
+
+  /**
+   * 错误放生在什么资源上：xml
+   */
   private String resource;
+
+  /**
+   * 错误发生的活动
+   */
   private String activity;
   private String object;
   private String message;
+
+  /**
+   * 错误发生的sql
+   */
   private String sql;
   private Throwable cause;
 

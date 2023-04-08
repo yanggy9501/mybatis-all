@@ -1,4 +1,4 @@
-package com.mybatis.demo.module;
+package com.mybatis.demo.tools;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.StaticSqlSource;
