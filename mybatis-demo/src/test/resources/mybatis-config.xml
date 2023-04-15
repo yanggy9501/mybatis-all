@@ -3,7 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <!-- properties 扫描属性文件.properties, 下面就看使用配置文件中的属性值  -->
-    <properties resource="db.properties" />
+    <properties resource="db.properties">
+        <property name="myKey" value="myValue"/>
+    </properties>
 
     <!--  -->
     <settings>

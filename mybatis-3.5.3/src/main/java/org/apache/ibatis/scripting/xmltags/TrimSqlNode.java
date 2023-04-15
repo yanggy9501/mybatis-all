@@ -15,14 +15,9 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
-
 import org.apache.ibatis.session.Configuration;
+
+import java.util.*;
 
 /**
  * @author Clinton Begin
@@ -93,12 +88,12 @@ public class TrimSqlNode implements SqlNode {
       sqlBuffer = new StringBuilder(sqlBuffer.toString().trim());
       String trimmedUppercaseSql = sqlBuffer.toString().toUpperCase(Locale.ENGLISH); // 转换成大写
       if (trimmedUppercaseSql.length() > 0) { // 如果trim(where、set)中有内容
-        /**
+        /*
          * 1. 处理prefixOverrides 前去除  如果<WHERE> prefixOverrides="and|or"
          * 2. 处理prefix 前追加 如果<WHERE>  prefix=where  如果<SET>  prefix=set
          */
         applyPrefix(sqlBuffer, trimmedUppercaseSql);
-        /**
+        /*
          * 1. 处理suffixOverrides 尾去除  如果<SET> suffixOverrides=","
          * 2. 处理suffix   尾追加
          */

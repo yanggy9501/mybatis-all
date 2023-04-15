@@ -19,7 +19,14 @@ package org.apache.ibatis.scripting.xmltags;
  * @author Clinton Begin
  */
 public class IfSqlNode implements SqlNode {
+  /**
+   * ognl 解析器
+   */
   private final ExpressionEvaluator evaluator;
+
+  /**
+   * 条件：a != null and a !=''
+   */
   private final String test;
   private final SqlNode contents;
 
@@ -31,6 +38,7 @@ public class IfSqlNode implements SqlNode {
 
   @Override
   public boolean apply(DynamicContext context) {
+    // ognl 解析
     if (evaluator.evaluateBoolean(test, context.getBindings())) {
       // 处理完<if 递归回去继续处理
       contents.apply(context);

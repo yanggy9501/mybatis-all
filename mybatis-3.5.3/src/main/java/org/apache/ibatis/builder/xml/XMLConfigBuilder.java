@@ -145,7 +145,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       /*
        * 解析 properties节点
        *     <properties resource="mybatis/db.properties" />
-       *     解析到org.apache.ibatis.parsing.XPathParser#variables
+       *     解析到 org.apache.ibatis.parsing.XPathParser#variables
        *           org.apache.ibatis.session.Configuration#variables
        */
       propertiesElement(root.evalNode("properties"));
@@ -155,11 +155,11 @@ public class XMLConfigBuilder extends BaseBuilder {
        * <settings>
             <setting name="cacheEnabled" value="true"/>
             <setting name="lazyLoadingEnabled" value="true"/>
-           <setting name="mapUnderscoreToCamelCase" value="false"/>
-           <setting name="localCacheScope" value="SESSION"/>
-           <setting name="jdbcTypeForNull" value="OTHER"/>
+            <setting name="mapUnderscoreToCamelCase" value="false"/>
+            setting name="localCacheScope" value="SESSION"/>
+            <setting name="jdbcTypeForNull" value="OTHER"/>
             ..............
-           </settings>
+         </settings>
        *
        */
       Properties settings = settingsAsProperties(root.evalNode("settings"));
@@ -177,30 +177,32 @@ public class XMLConfigBuilder extends BaseBuilder {
        */
       loadCustomLogImpl(settings);
       /*
-       * 解析我们的别名
-       * <typeAliases>
-           <typeAlias alias="Author" type="cn.tulingxueyuan.pojo.Author"/>
+       解析我们的别名注册器
+        <typeAliases>
+           <typeAlias alias="Author" type="cn.xxx.pojo.Author"/>
         </typeAliases>
+
        <typeAliases>
-          <package name="cn.tulingxueyuan.pojo"/>
+          <package name="cn.xxx.pojo"/>
        </typeAliases>
+
        解析到oorg.apache.ibatis.session.Configuration#typeAliasRegistry.typeAliases
        除了自定义的，还有内置的
        */
       typeAliasesElement(root.evalNode("typeAliases"));
       /*
-       * 解析我们的插件(比如分页插件)
+        解析我们的插件(比如分页插件)
        * mybatis自带的
-       * Executor (update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)
+         Executor (update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)
          ParameterHandler (getParameterObject, setParameters)
          ResultSetHandler (handleResultSets, handleOutputParameters)
          StatementHandler (prepare, parameterize, batch, update, query)
-        解析到：org.apache.ibatis.session.Configuration#interceptorChain.interceptors
+         解析到：org.apache.ibatis.session.Configuration#interceptorChain.interceptors
        */
       pluginElement(root.evalNode("plugins"));
 
       /*
-       * 可以配置  一般不会去设置
+       * 可以配置 一般不会去设置
        * 对象工厂 用于反射实例化对象、对象包装工厂、
        * 反射工厂 用于属性和setter/getter 获取
        */
@@ -212,7 +214,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       settingsElement(settings);
 
       /*
-       * 解析我们的mybatis环境
+        解析我们的mybatis环境
          <environments default="dev">
            <environment id="dev">
              <transactionManager type="JDBC"/>
@@ -238,7 +240,7 @@ public class XMLConfigBuilder extends BaseBuilder {
        *  在集成spring情况下由 spring-mybatis提供数据源 和事务工厂
        */
       environmentsElement(root.evalNode("environments"));
-      /**
+      /*
        * 解析数据库厂商
        *     <databaseIdProvider type="DB_VENDOR">
                 <property name="SQL Server" value="sqlserver"/>
@@ -249,15 +251,15 @@ public class XMLConfigBuilder extends BaseBuilder {
        *  解析到：org.apache.ibatis.session.Configuration#databaseId
        */
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
-      /**
+      /*
        * 解析我们的类型处理器节点
-       * <typeHandlers>
+         <typeHandlers>
             <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
           </typeHandlers>
           解析到：org.apache.ibatis.session.Configuration#typeHandlerRegistry.typeHandlerMap
        */
       typeHandlerElement(root.evalNode("typeHandlers"));
-      /**
+      /*
        * 最最最最最重要的就是解析我们的mapper
        *
        resource：来注册我们的class类路径下的
@@ -268,10 +270,8 @@ public class XMLConfigBuilder extends BaseBuilder {
        -->
        <mappers>
           <mapper resource="mybatis/mapper/EmployeeMapper.xml"/>
-          <mapper class="com.tuling.mapper.DeptMapper"></mapper>
-
-
-            <package name="com.tuling.mapper"></package>
+          <mapper class="com.xxx.mapper.DeptMapper" />
+          <package name="com.xxx.mapper" />
           -->
        </mappers>
        * package
@@ -382,14 +382,21 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   private void propertiesElement(XNode context) throws Exception {
+   // 没有配置 properties 标签
     if (context != null) {
       Properties defaults = context.getChildrenAsProperties();
+      /*
+        <properties resource="db.properties">
+          <property name="myKey" value="myValue"/>
+        </properties>
+       */
       String resource = context.getStringAttribute("resource");
       String url = context.getStringAttribute("url");
       if (resource != null && url != null) {
         throw new BuilderException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
       }
       if (resource != null) {
+        // Resources 加载资源
         defaults.putAll(Resources.getResourceAsProperties(resource));
       } else if (url != null) {
         defaults.putAll(Resources.getUrlAsProperties(url));

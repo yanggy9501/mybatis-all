@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import org.apache.ibatis.builder.BuilderException;
+
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.builder.BuilderException;
 
 /**
  * @author Clinton Begin
@@ -30,9 +30,11 @@ public class ExpressionEvaluator {
 
   public boolean evaluateBoolean(String expression, Object parameterObject) {
     Object value = OgnlCache.getValue(expression, parameterObject);
+    // bool
     if (value instanceof Boolean) {
       return (Boolean) value;
     }
+    // 数字，则与 0 比较
     if (value instanceof Number) {
       return new BigDecimal(String.valueOf(value)).compareTo(BigDecimal.ZERO) != 0;
     }

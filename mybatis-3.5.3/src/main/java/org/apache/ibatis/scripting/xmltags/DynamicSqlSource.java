@@ -28,6 +28,9 @@ import org.apache.ibatis.session.Configuration;
 public class DynamicSqlSource implements SqlSource {
 
   private final Configuration configuration;
+  /**
+   * SQL 节点，if、where、Trim标签，以及标签的内容等等
+   */
   private final SqlNode rootSqlNode;
 
   public DynamicSqlSource(Configuration configuration, SqlNode rootSqlNode) {
@@ -36,6 +39,9 @@ public class DynamicSqlSource implements SqlSource {
   }
 
   /**
+   * 动态sql：带有标签如 if where 等等标签或者待用mybatis占位符 ${} #{}
+   * 解析：1.解析标签，2.mybatis占位符替换位statement占位符 ？
+   *
    * 这个方法主要做2件事：
    * 1. 解析所有sqlNode  解析成一条完整sql语句
    * 2. 将sql语句中的#{} 替换成问号， 并且把#{}中的参数解析成ParameterMapping （里面包含了typeHandler)

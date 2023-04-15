@@ -26,29 +26,41 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 /**
+ * 动态sql 的上下文
+ *
  * @author Clinton Begin
  */
 public class DynamicContext {
 
+  /**
+   * 放参数用
+   */
   public static final String PARAMETER_OBJECT_KEY = "_parameter";
+
+  /**
+   * 指定厂商用
+   */
   public static final String DATABASE_ID_KEY = "_databaseId";
 
   static {
+    // 往 ognl 放一个 ognl 的上下文和一个上下文访问器
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
   }
 
   /**
-   * 绑定上下文
+   * 绑定上下文（ognl的上下文）
    */
   private final ContextMap bindings;
 
   /**
-   * append 解析的 sql
+   * sqlBuilder 使用 append 追加空格分隔符 + sql片段。
+   * 拼接 sql
    */
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
   private int uniqueNumber = 0;
 
   public DynamicContext(Configuration configuration, Object parameterObject) {
+    // parameterObject：查询条件的参数，普通数据类型，Map，复杂数据类型等等
     if (parameterObject != null && !(parameterObject instanceof Map)) {
       MetaObject metaObject = configuration.newMetaObject(parameterObject);
       boolean existsTypeHandler = configuration.getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass());
@@ -56,6 +68,7 @@ public class DynamicContext {
     } else {
       bindings = new ContextMap(null, false);
     }
+    // 维护原始的 parameterObject
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
     bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());
   }
@@ -82,6 +95,10 @@ public class DynamicContext {
 
   static class ContextMap extends HashMap<String, Object> {
     private static final long serialVersionUID = 2977601501966151582L;
+
+    /**
+     * 维护参数对象
+     */
     private final MetaObject parameterMetaObject;
     private final boolean fallbackParameterObject;   // 是否已知类型处理的的类型
 
@@ -101,6 +118,7 @@ public class DynamicContext {
         return null;
       }
 
+      // 参数没有 getter 方法，直接返回参数本身否则返回getter方法的返回值
       if (fallbackParameterObject && !parameterMetaObject.hasGetter(strKey)) {
         return parameterMetaObject.getOriginalObject();
       } else {

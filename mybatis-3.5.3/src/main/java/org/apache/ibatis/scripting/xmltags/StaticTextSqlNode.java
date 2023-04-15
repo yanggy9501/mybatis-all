@@ -27,6 +27,7 @@ public class StaticTextSqlNode implements SqlNode {
 
   @Override
   public boolean apply(DynamicContext context) {
+    // 放到 StringJoiner 中
     context.appendSql(text);
     return true;
   }
