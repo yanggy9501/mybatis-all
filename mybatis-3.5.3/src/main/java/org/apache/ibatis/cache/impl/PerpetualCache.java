@@ -15,17 +15,22 @@
  */
 package org.apache.ibatis.cache.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
+ * 默认的缓存实现
+ *
  * @author Clinton Begin
  */
 public class PerpetualCache implements Cache {
 
+  /**
+   * ID: 命名空间
+   */
   private final String id;
 
   private Map<Object, Object> cache = new HashMap<>();

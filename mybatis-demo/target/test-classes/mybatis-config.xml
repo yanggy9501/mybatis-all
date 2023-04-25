@@ -7,7 +7,7 @@
         <property name="myKey" value="myValue"/>
     </properties>
 
-    <!--  -->
+    <!-- settings -->
     <settings>
         <setting name="logImpl" value="SLF4J"/>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
@@ -19,6 +19,7 @@
         <typeAlias type="com.mybatis.demo.entity.User" alias="user" />
         <!-- 批量默认指定：类名首字母小写 -->
         <package name="com.mybatis.demo.entity"/>
+        <!-- 可以使用 @Alias 注解 -->
     </typeAliases>
 
     <!-- 插件配置 -->
@@ -33,11 +34,11 @@
            <transactionManager type="JDBC"/>
             <!--//  mybatis内置了JNDI、POOLED、UNPOOLED三种类型的数据源,其中POOLED对应的实现为org.apache.ibatis.datasource.pooled.PooledDataSource,它是mybatis自带实现的一个同步、线程安全的数据库连接池 一般在生产中,我们会使用c3p0或者druid连接池-->
             <dataSource type="POOLED">
-            <property name="driver" value="${mysql.driverClass}"/>
-            <property name="url" value="${mysql.jdbcUrl}"/>
-            <property name="username" value="${mysql.user}"/>
-            <property name="password" value="${mysql.password}"/>
-        </dataSource>
+                <property name="driver" value="${mysql.driverClass}"/>
+                <property name="url" value="${mysql.jdbcUrl}"/>
+                <property name="username" value="${mysql.user}"/>
+                <property name="password" value="${mysql.password}"/>
+            </dataSource>
         </environment>
     </environments>
 

@@ -15,17 +15,19 @@
  */
 package org.apache.ibatis.transaction.jdbc;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import javax.sql.DataSource;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionException;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 /**
+ * JDBC 事务
+ *
  * {@link Transaction} that makes use of the JDBC commit and rollback facilities directly.
  * It relies on the connection retrieved from the dataSource to manage the scope of the transaction.
  * Delays connection retrieval until getConnection() is called.
@@ -40,7 +42,13 @@ public class JdbcTransaction implements Transaction {
   private static final Log log = LogFactory.getLog(JdbcTransaction.class);
 
   protected Connection connection;
+  /**
+   * DataSource 用于获取连接
+   */
   protected DataSource dataSource;
+  /**
+   * 事务隔离级别
+   */
   protected TransactionIsolationLevel level;
   protected boolean autoCommit;
 
@@ -54,6 +62,12 @@ public class JdbcTransaction implements Transaction {
     this.connection = connection;
   }
 
+  /**
+   * 获取连接 = java.sql.DriverManager
+   *
+   * @return
+   * @throws SQLException
+   */
   @Override
   public Connection getConnection() throws SQLException {
     if (connection == null) {

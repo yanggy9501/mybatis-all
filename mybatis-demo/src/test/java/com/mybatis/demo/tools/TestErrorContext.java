@@ -33,8 +33,9 @@ public class TestErrorContext {
                     }
                 } catch (Exception e) {
                     throw ExceptionFactory.wrapException("has errors", e);
+                } finally {
+                    countDownLatch.countDown();
                 }
-                countDownLatch.countDown();
             });
         }
         countDownLatch.await();

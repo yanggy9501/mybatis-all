@@ -447,6 +447,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
         if (isSpecifiedEnvironment(id)) {
+          // 事务管理器工厂；事务管理器提供开启事务，提交事务，已经回滚的 API（最原始的通过JDK的 Connection 操作）。
+          // 连接最终也是通过 java.sql.DriverManager 去获取连接
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
           DataSource dataSource = dsFactory.getDataSource();
@@ -537,50 +539,50 @@ public class XMLConfigBuilder extends BaseBuilder {
    */
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
-      /**
+      /*
        * 获取我们mappers节点下的一个一个的mapper节点
        */
       for (XNode child : parent.getChildren()) {
-        /**
+        /*
          * 判断我们mapper是不是通过批量注册的
-         * <package name="com.tuling.mapper"></package>
+         * <package name="com.xxx.mapper"></package>
          */
         if ("package".equals(child.getName())) {
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {
-          /**
+          /*
            * 判断从classpath下读取我们的mapper
            * <mapper resource="mybatis/mapper/EmployeeMapper.xml"/>
            */
           String resource = child.getStringAttribute("resource");
-          /**
+          /*
            * 判断是不是从我们的网络资源读取(或者本地磁盘得)
            * <mapper url="D:/mapper/EmployeeMapper.xml"/>
            */
           String url = child.getStringAttribute("url");
-          /**
+          /*
            * 解析这种类型(要求接口和xml在同一个包下)
            * <mapper class="com.tuling.mapper.DeptMapper"></mapper>
            *
            */
           String mapperClass = child.getStringAttribute("class");
 
-          /**
+          /*
            * 我们得mappers节点只配置了
            * <mapper resource="mybatis/mapper/EmployeeMapper.xml"/>
            */
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
-            /**
+            /*
              * 把我们的文件读取出一个流
              */
             InputStream inputStream = Resources.getResourceAsStream(resource);
-            /**
+            /*
              * 创建读取XmlMapper构建器对象,用于来解析我们的mapper.xml文件
              */
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-            /**
+            /*
              * 真正的解析我们的mapper.xml配置文件(说白了就是来解析我们的sql)
              */
             mapperParser.parse();

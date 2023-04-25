@@ -15,24 +15,19 @@
  */
 package org.apache.ibatis.mapping;
 
+import org.apache.ibatis.builder.InitializingObject;
+import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.cache.decorators.*;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
+
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import org.apache.ibatis.builder.InitializingObject;
-import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.cache.CacheException;
-import org.apache.ibatis.cache.decorators.BlockingCache;
-import org.apache.ibatis.cache.decorators.LoggingCache;
-import org.apache.ibatis.cache.decorators.LruCache;
-import org.apache.ibatis.cache.decorators.ScheduledCache;
-import org.apache.ibatis.cache.decorators.SerializedCache;
-import org.apache.ibatis.cache.decorators.SynchronizedCache;
-import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.SystemMetaObject;
 
 /**
  * @author Clinton Begin
@@ -93,8 +88,10 @@ public class CacheBuilder {
     setDefaultImplementations();
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
-    // issue #352, do not apply decorators to custom caches 不将装饰器应用到自定义缓存
+    // issue #352, do not apply decorators to custom caches
+    // 不将装饰器应用到自定义缓存(只包装mybatis自己默认的缓存)
     if (PerpetualCache.class.equals(cache.getClass())) {
+      // 包装 cache，默认只有 lru 的 decorator
       for (Class<? extends Cache> decorator : decorators) {
         cache = newCacheDecoratorInstance(decorator, cache);
         setCacheProperties(cache);
@@ -122,11 +119,13 @@ public class CacheBuilder {
         metaCache.setValue("size", size);
       }
       if (clearInterval != null) {
-        cache = new ScheduledCache(cache);//ScheduledCache：调度缓存，负责定时清空缓存
+        // ScheduledCache 包装 cache：调度缓存，负责定时清空缓存
+        cache = new ScheduledCache(cache);
         ((ScheduledCache) cache).setClearInterval(clearInterval);
       }
       if (readWrite) {
-        cache = new SerializedCache(cache); //SerializedCache：缓存序列化和反序列化存储
+        // SerializedCache：缓存序列化和反序列化存储
+        cache = new SerializedCache(cache);
       }
       cache = new LoggingCache(cache);
       cache = new SynchronizedCache(cache);
@@ -208,7 +207,7 @@ public class CacheBuilder {
     // 得到构造器public LruCache(Cache delegate)
     Constructor<? extends Cache> cacheConstructor = getCacheDecoratorConstructor(cacheClass);
     try {
-      //  通过构造器反射得到实例和 （包装PerpetualCache）
+      //  通过构造器反射得到实例和 （ LruCache 包装PerpetualCache）
       return cacheConstructor.newInstance(base);
     } catch (Exception e) {
       throw new CacheException("Could not instantiate cache decorator (" + cacheClass + "). Cause: " + e, e);

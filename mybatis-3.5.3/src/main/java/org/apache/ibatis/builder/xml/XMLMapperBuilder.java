@@ -15,38 +15,21 @@
  */
 package org.apache.ibatis.builder.xml;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.apache.ibatis.builder.BaseBuilder;
-import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.CacheRefResolver;
-import org.apache.ibatis.builder.IncompleteElementException;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.builder.ResultMapResolver;
+import org.apache.ibatis.builder.*;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.Discriminator;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.ResultFlag;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.*;
 
 /**
  * @author Clinton Begin
@@ -97,16 +80,15 @@ public class XMLMapperBuilder extends BaseBuilder {
    * @date:2019/8/30 16:43
    */
   public void parse() {
-    /**
+    /*
      * 判断当前的Mapper是否被加载过
      */
     if (!configuration.isResourceLoaded(resource)) {
-      /**
-       * 真正的解析我们的 <mapper namespace="com.tuling.mapper.EmployeeMapper">
-       *
+      /*
+       * 真正的解析我们的 <mapper namespace="com.xxx.mapper.EmployeeMapper">
        */
       configurationElement(parser.evalNode("/mapper"));
-      /**
+      /*
        * 把资源保存到我们Configuration中
        */
         configuration.addLoadedResource(resource);
@@ -133,52 +115,52 @@ public class XMLMapperBuilder extends BaseBuilder {
    */
   private void configurationElement(XNode context) {
     try {
-      /**
+      /*
        * 解析我们的namespace属性
-       * <mapper namespace="com.tuling.mapper.EmployeeMapper">
+       * <mapper namespace="com.xxx.mapper.EmployeeMapper">
        */
       String namespace = context.getStringAttribute("namespace");
       if (namespace == null || namespace.equals("")) {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
-      /**
+      /*
        * 保存我们当前的namespace  并且判断接口完全类名==namespace
        */
       builderAssistant.setCurrentNamespace(namespace);
-      /**
-       * 解析我们的缓存引用
+      /*
+       * 解析我们的缓存引用-当前命名空间可以使用其他命名空间的缓存
        * 说明我当前的缓存引用和DeptMapper的缓存引用一致
        * <cache-ref namespace="com.tuling.mapper.DeptMapper"></cache-ref>
             解析到org.apache.ibatis.session.Configuration#cacheRefMap<当前namespace,ref-namespace>
             异常下（引用缓存未使用缓存）：org.apache.ibatis.session.Configuration#incompleteCacheRefs
        */
       cacheRefElement(context.evalNode("cache-ref"));
-      /**
+      /*
        * 解析我们的cache节点
-       * <cache ></cache>
+       * <cache></cache>
           解析到：org.apache.ibatis.session.Configuration#caches
                  org.apache.ibatis.builder.MapperBuilderAssistant#currentCache
        */
       cacheElement(context.evalNode("cache"));
-      /**
-       * 解析paramterMap节点(该节点mybaits3.5貌似不推荐使用了)
+      /*
+       * 解析parameterMap节点(该节点mybaits3.5貌似不推荐使用了)
        */
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
-      /**
+      /*
        * 解析我们的resultMap节点
        * 解析到：org.apache.ibatis.session.Configuration#resultMaps
        *    异常 org.apache.ibatis.session.Configuration#incompleteResultMaps
        *
        */
       resultMapElements(context.evalNodes("/mapper/resultMap"));
-      /**
+      /*
        * 解析我们通过sql片段
        *  解析到org.apache.ibatis.builder.xml.XMLMapperBuilder#sqlFragments
        *   其实等于 org.apache.ibatis.session.Configuration#sqlFragments
        *   因为他们是同一引用，在构建XMLMapperBuilder 时把Configuration.getSqlFragments传进去了
        */
       sqlElement(context.evalNodes("/mapper/sql"));
-      /**
+      /*
        * 解析我们的select | insert |update |delete节点
        * 解析到org.apache.ibatis.session.Configuration#mappedStatements
        */
@@ -317,27 +299,28 @@ public class XMLMapperBuilder extends BaseBuilder {
    */
   private void cacheElement(XNode context) {
     if (context != null) {
-      //解析cache节点的type属性
+      // 解析cache节点的type属性
       String type = context.getStringAttribute("type", "PERPETUAL");
       // 根据别名（或完整限定名）  加载为Class
       Class<? extends Cache> typeClass = typeAliasRegistry.resolveAlias(type);
-      /*获取缓存过期策略:默认是LRU
-      LRU – 最近最少使用：移除最长时间不被使用的对象。（默认）
-      FIFO – 先进先出：按对象进入缓存的顺序来移除它们。
-      SOFT – 软引用：基于垃圾回收器状态和软引用规则移除对象。
-      WEAK – 弱引用：更积极地基于垃圾收集器状态和弱引用规则移除对象。
+      /*
+        获取缓存过期策略:默认是LRU
+        LRU – 最近最少使用：移除最长时间不被使用的对象。（默认）
+        FIFO – 先进先出：按对象进入缓存的顺序来移除它们。
+        SOFT – 软引用：基于垃圾回收器状态和软引用规则移除对象。
+        WEAK – 弱引用：更积极地基于垃圾收集器状态和弱引用规则移除对象。
       */
       String eviction = context.getStringAttribute("eviction", "LRU");
       Class<? extends Cache> evictionClass = typeAliasRegistry.resolveAlias(eviction);
-      //flushInterval（刷新间隔）属性可以被设置为任意的正整数，设置的值应该是一个以毫秒为单位的合理时间量。 默认情况是不设置，也就是没有刷新间隔，缓存仅仅会在调用语句时刷新。
+      // flushInterval（刷新间隔）属性可以被设置为任意的正整数，设置的值应该是一个以毫秒为单位的合理时间量。 默认情况是不设置，也就是没有刷新间隔，缓存仅仅会在调用语句时刷新。
       Long flushInterval = context.getLongAttribute("flushInterval");
-      //size（引用数目）属性可以被设置为任意正整数，要注意欲缓存对象的大小和运行环境中可用的内存资源。默认值是 1024。
+      // size（引用数目）属性可以被设置为任意正整数，要注意欲缓存对象的大小和运行环境中可用的内存资源。默认值是 1024。
       Integer size = context.getIntAttribute("size");
-      //只读）属性可以被设置为 true 或 false。只读的缓存会给所有调用者返回缓存对象的相同实例。 因此这些对象不能被修改。这就提供了可观的性能提升。而可读写的缓存会（通过序列化）返回缓存对象的拷贝。 速度上会慢一些，但是更安全，因此默认值是 false
+      // (只读）属性可以被设置为 true 或 false。只读的缓存会给所有调用者返回缓存对象的相同实例。 因此这些对象不能被修改。这就提供了可观的性能提升。而可读写的缓存会（通过序列化）返回缓存对象的拷贝。 速度上会慢一些，但是更安全，因此默认值是 false
       boolean readWrite = !context.getBooleanAttribute("readOnly", false);
       boolean blocking = context.getBooleanAttribute("blocking", false);
       Properties props = context.getChildrenAsProperties();
-      //把缓存节点加入到Configuration中
+      // 创建 cache 并把缓存节点加入到Configuration中
       builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, blocking, props);
     }
   }

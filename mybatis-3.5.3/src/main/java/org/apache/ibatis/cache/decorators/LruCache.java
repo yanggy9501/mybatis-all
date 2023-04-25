@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.cache.decorators;
 
+import org.apache.ibatis.cache.Cache;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.apache.ibatis.cache.Cache;
 
 /**
  * Lru (least recently used) cache decorator.
@@ -27,12 +27,24 @@ import org.apache.ibatis.cache.Cache;
  */
 public class LruCache implements Cache {
 
+  /**
+   * 被装饰对象（主体）
+   */
   private final Cache delegate;
+
+  /**
+   * 管理 lru
+   */
   private Map<Object, Object> keyMap;
+
+  /**
+   * 最老的 key
+   */
   private Object eldestKey;
 
   public LruCache(Cache delegate) {
     this.delegate = delegate;
+    // 实现 lru
     setSize(1024);
   }
 
@@ -51,7 +63,7 @@ public class LruCache implements Cache {
     keyMap = new LinkedHashMap<Object, Object>(size, .75F, true) {
       private static final long serialVersionUID = 4267176411845948333L;
 
-      //当put进新的值方法返回true时，便移除该map中最老的键和值。
+      // 当put进新的值方法返回true时，便移除该map中最老的键和值。删除最老的 key，并赋值给成员属性 eldestKey
       @Override
       protected boolean removeEldestEntry(Map.Entry<Object, Object> eldest) {
         boolean tooBig = size() > size;
@@ -69,10 +81,16 @@ public class LruCache implements Cache {
     cycleKeyList(key);
   }
 
-  //每次访问都会遍历一次key进行重新排序，将访问元素放到链表尾部。
+  /**
+   * 每次访问都会遍历一次key进行重新排序，将访问元素放到链表尾部。
+   *
+   * @param key The key
+   * @return
+   */
   @Override
   public Object getObject(Object key) {
-    keyMap.get(key); //touch
+    // touch
+    keyMap.get(key);
     return delegate.getObject(key);
   }
 
@@ -88,8 +106,10 @@ public class LruCache implements Cache {
   }
 
   private void cycleKeyList(Object key) {
+    // lru 放入最新的 key
     keyMap.put(key, key);
     if (eldestKey != null) {
+      // 删除最老的key
       delegate.removeObject(eldestKey);
       eldestKey = null;
     }
