@@ -32,5 +32,7 @@ public class TestStarter01 {
         user.setCreateTime(new Date());
         session.insert("com.mybatis.demo.mapper.UserMapper.insert", user);
 //        session.commit();
+
+        session.selectOne("xxxx");
     }
 }

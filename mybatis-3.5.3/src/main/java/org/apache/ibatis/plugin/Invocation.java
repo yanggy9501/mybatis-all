@@ -19,12 +19,25 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * 插件中的调用对象的封装
+ *
  * @author Clinton Begin
  */
 public class Invocation {
 
+  /**
+   * 插件中被拦截的目标对象（4 大对象之一）
+   */
   private final Object target;
+
+  /**
+   * target 中被拦截的方法
+   */
   private final Method method;
+
+  /**
+   * 被拦截的方法参数
+   */
   private final Object[] args;
 
   public Invocation(Object target, Method method, Object[] args) {

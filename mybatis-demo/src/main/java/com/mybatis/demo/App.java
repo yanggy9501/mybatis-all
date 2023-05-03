@@ -9,10 +9,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import java.io.IOException;
 import java.io.Reader;
 
-/***
- * @Author 徐庶   QQ:1092002729
- * @Slogan 致敬大师，致敬未来的你
- */
 public class App {
     public static void main(String[] args) throws IOException {
         String resource = "mybatis-config.xml";
@@ -25,15 +21,15 @@ public class App {
         SqlSession session = sqlSessionFactory.openSession();
         try {
             // 执行查询 底层执行jdbc 3
-            User user =  session.selectOne("com.tuling.mapper.UserMapper.selectById", 1);
+            User user =  session.selectOne("com.mybatis.demo.mapper.UserMapper.selectById", 2011);
 
             // 创建动态代理
 //           UserMapper mapper = session.getMapper(UserMapper.class);
 //            System.out.println(mapper.getClass());
 //            User user = mapper.selectById(1);
             System.out.println(user.getUsername());
-
             session.commit();
+            System.out.println(user);
         } catch (Exception e) {
             e.printStackTrace();
             session.rollback();

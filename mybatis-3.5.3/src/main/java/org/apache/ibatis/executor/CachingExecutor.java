@@ -15,22 +15,18 @@
  */
 package org.apache.ibatis.executor;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.TransactionalCacheManager;
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
+
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author Clinton Begin
@@ -78,10 +74,11 @@ public class CachingExecutor implements Executor {
 
   /**
    * 方法实现说明:通过我们的sql执行器对象执行sql
+   *
    * @author:xsls
    * @param ms 用于封装我们一个个的insert|delete|update|select 对象
    * @param parameterObject:参数对象
-   * @param rowBounds :mybaits的逻辑分页对象 TODO？？？？？
+   * @param rowBounds : mybatis 的逻辑分页对象
    * @param resultHandler:结果处理器对象
    * @return:
    * @exception:
@@ -89,8 +86,8 @@ public class CachingExecutor implements Executor {
    */
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-    /**
-     * 通过参数对象解析我们的sql详细信息1339025938:1570540512:com.tuling.mapper.selectById:0:2147483647:select id,user_name,create_time from t_user where id=?:1:development
+    /*
+     * 通过参数对象解析我们的sql详细信息：1339025938:1570540512:com.xxx.mapper.selectById:0:2147483647:select id,user_name,create_time from t_user where id=?:1:development
      */
     BoundSql boundSql = ms.getBoundSql(parameterObject);
     CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
@@ -106,11 +103,12 @@ public class CachingExecutor implements Executor {
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
       throws SQLException {
-    /**
+    /*
      * 判断我们我们的mapper中是否开启了二级缓存<cache></cache>
      */
     Cache cache = ms.getCache();
-    /**
+
+    /*
      * 判断是否配置了<cache></cache>
      */
     if (cache != null) {
@@ -118,12 +116,12 @@ public class CachingExecutor implements Executor {
       flushCacheIfRequired(ms);
       if (ms.isUseCache() && resultHandler == null) {
         ensureNoOutParams(ms, boundSql);
-        /**
+        /*
          * 先去二级缓存中获取
          */
         @SuppressWarnings("unchecked")
         List<E> list = (List<E>) tcm.getObject(cache, key);
-        /**
+        /*
          * 二级缓存中没有获取到
          */
         if (list == null) {

@@ -6,5 +6,5 @@ public interface UserMapper {
 
     User selectById(Integer id);
 
-    void updateForName(String id,String username);
+//    void updateForName(String id,String username);
 }

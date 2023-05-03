@@ -16,16 +16,16 @@
 package org.apache.ibatis.session;
 
 /**
-* @vlog: 高于生活，源于生活
-* @desc: 类的描述:逻辑分页对象
-* @author: xsls
-* @createDate: 2019/9/9 20:31
-* @version: 1.0
-*/
+ * 分页
+ */
 public class RowBounds {
-  /* 默认offset是0**/
+  /**
+   * 默认 offset 是 0
+   */
   public static final int NO_ROW_OFFSET = 0;
-  /* 默认Limit是int的最大值，因此它使用的是逻辑分页**/
+  /**
+   * 默认Limit是int的最大值，因此它使用的是逻辑分页
+   */
   public static final int NO_ROW_LIMIT = Integer.MAX_VALUE;
   public static final RowBounds DEFAULT = new RowBounds();
 

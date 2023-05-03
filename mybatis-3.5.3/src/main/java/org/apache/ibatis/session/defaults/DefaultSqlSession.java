@@ -76,9 +76,10 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   /**
-   * 方法实现说明:查询我们当个对象
+   * 方法实现说明:查询我们单个对象
+   *
    * @author:xsls
-   * @param statement:我们的statementId(com.tuling.mapper.EmployeeMapper.findOne)
+   * @param statement:我们的statementId
    * @param parameter:调用时候的参数
    * @return: T 返回结果
    * @exception:
@@ -87,7 +88,8 @@ public class DefaultSqlSession implements SqlSession {
   @Override
   public <T> T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
-    /**
+
+    /*
      * 这里selectOne调用也是调用selectList方法
      */
     List<T> list = this.selectList(statement, parameter);
@@ -95,7 +97,8 @@ public class DefaultSqlSession implements SqlSession {
     if (list.size() == 1) {
       return list.get(0);
     } else if (list.size() > 1) {
-      /**
+
+      /*
        * 查询的有多个,那么久抛出我们熟悉的异常
        * Expected one result (or null) to be returned by selectOne(), but found: " + list.size()
        */
@@ -171,10 +174,11 @@ public class DefaultSqlSession implements SqlSession {
 
   /**
    * 方法实现说明
+   *
    * @author:xsls
    * @param statement: statementId
    * @param parameter:参数对象
-   * @param rowBounds :mybiats的逻辑分页对象
+   * @param rowBounds :mybatis 的逻辑分页对象
    * @return:
    * @exception:
    * @date:2019/9/9 20:33
@@ -182,13 +186,12 @@ public class DefaultSqlSession implements SqlSession {
   @Override
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
-      /**
+      /*
        * 第一步：通过我们的statement去我们的全局配置类中获取MappedStatement
-       *
        * CRUD
        */
       MappedStatement ms = configuration.getMappedStatement(statement);
-      /**
+      /*
        * 通过执行器去执行我们的sql对象
        * 第一步:包装我们的集合类参数
        * 第二步:一般情况下是executor为cacheExetory对象

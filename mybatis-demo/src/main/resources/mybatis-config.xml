@@ -25,7 +25,8 @@
 
     <!-- 插件配置 -->
    <plugins>
-       <plugin interceptor="com.mybatis.demo.plugins.ExamplePlugin" />
+<!--       <plugin interceptor="com.mybatis.demo.plugins.ExamplePlugin" />-->
+       <plugin interceptor="com.mybatis.demo.plugins.SqlCostTimeInterceptor" />
     </plugins>
 
     <!-- 环境配置 -->

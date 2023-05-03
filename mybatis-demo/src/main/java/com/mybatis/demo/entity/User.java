@@ -19,7 +19,6 @@ public class User implements Serializable{
     private Long id ;
     public String username ;
     private Date createTime;
-
     private Dept dept;
 
 

@@ -15,14 +15,6 @@
  */
 package org.apache.ibatis.executor;
 
-import static org.apache.ibatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cursor.Cursor;
@@ -30,11 +22,7 @@ import org.apache.ibatis.executor.statement.StatementUtil;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.jdbc.ConnectionLogger;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
@@ -44,6 +32,14 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static org.apache.ibatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
+
 /**
  * @author Clinton Begin
  */
@@ -51,22 +47,22 @@ public abstract class BaseExecutor implements Executor {
 
   private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
-  //事务对象
+  // 事务对象
   protected Transaction transaction;
-  //执行权包装对象
+  // 执行权包装对象
   protected Executor wrapper;
 
-  //延时加载队列
+  // 延时加载队列
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
-  //一级缓存
+  // 一级缓存
   protected PerpetualCache localCache;
-  //本地输出类型的参数的缓存
+  // 本地输出类型的参数的缓存
   protected PerpetualCache localOutputParameterCache;
-  //mysql全局配置文件
+  // mysql全局配置文件
   protected Configuration configuration;
-  //记录嵌套查询的层级
+  // 记录嵌套查询的层级
   protected int queryStack;
-  //是否关闭
+  // 是否关闭
   private boolean closed;
 
   /**
@@ -143,6 +139,7 @@ public abstract class BaseExecutor implements Executor {
 
   /**
    * 执行查询语句
+   *
    * @param ms 我们的执行sql包装对象（MappedStatement）
    * @param parameter:参数
    * @param rowBounds 逻辑分页参数
@@ -153,8 +150,9 @@ public abstract class BaseExecutor implements Executor {
    */
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-    //获取sql
+    // 获取sql
     BoundSql boundSql = ms.getBoundSql(parameter);
+    // 获取缓存的 key
     CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
     return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
   }
@@ -163,12 +161,14 @@ public abstract class BaseExecutor implements Executor {
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
-    //已经关闭，则抛出 ExecutorException 异常
+    // 已经关闭，则抛出 ExecutorException 异常
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
     // <2> 清空本地缓存，如果 queryStack 为零，并且要求清空本地缓存。
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
+      // 清空本地缓存查询之后就刷新：select 查询标签的 flushCache="true" 进行配置
+      // 注意：等到当前正在执行的 sql 执行完才刷新（一个查询标签的查询执行完）
       clearLocalCache();
     }
     List<E> list;
@@ -181,7 +181,7 @@ public abstract class BaseExecutor implements Executor {
         //处理存过的
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
-        // 获得不到，则从数据库中查询
+        // 【核心】获得不到，则从数据库中查询
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
     } finally {
@@ -193,6 +193,7 @@ public abstract class BaseExecutor implements Executor {
       }
       // issue #601
       deferredLoads.clear();
+      // 一级缓存默认时 SESSION，如果是 STATEMENT 则清除
       if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
         // issue #482
         clearLocalCache();
@@ -357,6 +358,7 @@ public abstract class BaseExecutor implements Executor {
 
   private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
+    // 本地缓存进行占位：并发的时候，只有一个进行db查询，其他的线程查询时发现由占位，等等缓存完成在去取
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
