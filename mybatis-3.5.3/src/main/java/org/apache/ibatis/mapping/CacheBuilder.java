@@ -128,6 +128,7 @@ public class CacheBuilder {
         cache = new SerializedCache(cache);
       }
       cache = new LoggingCache(cache);
+      // 同步-包装并发安全
       cache = new SynchronizedCache(cache);
       if (blocking) {
         cache = new BlockingCache(cache);

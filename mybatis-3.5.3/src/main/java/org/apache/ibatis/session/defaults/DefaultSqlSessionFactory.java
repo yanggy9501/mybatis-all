@@ -15,21 +15,17 @@
  */
 package org.apache.ibatis.session.defaults;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.TransactionIsolationLevel;
+import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * @author Clinton Begin
@@ -111,22 +107,23 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
     Transaction tx = null;
     try {
-      /**
+      /*
        * 获取环境变量
        */
       final Environment environment = configuration.getEnvironment();
-      /**
+      /*
        * 获取事务工厂
        */
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
-      /**
+      /*
        * 创建一个sql执行器对象
-       * 一般情况下 若我们的mybaits的全局配置文件的cacheEnabled默认为ture就返回
+       * 一般情况下 若我们的mybatis的全局配置文件的cacheEnabled默认为ture就返回
        * 一个cacheExecutor,若关闭的话返回的就是一个SimpleExecutor
+       * execType 默认：ExecutorType.SIMPLE
        */
       final Executor executor = configuration.newExecutor(tx, execType);
-      /**
+      /*
        * 创建返回一个DefaultSqlSession对象返回
        */
       return new DefaultSqlSession(configuration, executor, autoCommit);

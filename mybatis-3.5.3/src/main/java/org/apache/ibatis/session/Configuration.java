@@ -624,6 +624,7 @@ public class Configuration {
 
   /**
    * 方法实现说明:创建一个sql语句执行器对象
+   *
    * @author:xsls
    * @param transaction:事务
    * @param executorType:执行器类型
@@ -635,27 +636,29 @@ public class Configuration {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
-    /**
+    /*
      * 判断执行器的类型
      * 批量的执行器
      */
     if (ExecutorType.BATCH == executorType) {
       executor = new BatchExecutor(this, transaction);
     } else if (ExecutorType.REUSE == executorType) {
-      //可重复使用的执行器
+      // 可重复使用的执行器
       executor = new ReuseExecutor(this, transaction);
     } else {
-      //简单的sql执行器对象
+      // 简单的sql执行器对象(默认就是这个)
       executor = new SimpleExecutor(this, transaction);
     }
     //判断mybatis的全局配置文件是否开启缓存
     if (cacheEnabled) {
-      //把当前的简单的执行器包装成一个CachingExecutor
+      // 把当前的简单的执行器包装成一个 CachingExecutor（装饰者模式）
       executor = new CachingExecutor(executor);
     }
-    /**
-     * TODO:调用所有的拦截器对象plugin方法
-     * 插件： 责任链+ 装饰器模式（动态代理）
+    /*
+     * 配置插件，对sql执行进行干预
+     * 调用所有的拦截器对象plugin方法
+     * 插件： 责任链 + 装饰器模式（动态代理）
+     * 传入 executor 还返回 executor（这种写法一般时代理或者装设者模式）
      */
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;

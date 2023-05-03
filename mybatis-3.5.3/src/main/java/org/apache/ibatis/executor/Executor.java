@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.executor;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -26,6 +23,9 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
+
+import java.sql.SQLException;
+import java.util.List;
 
 
 /**
@@ -48,6 +48,7 @@ public interface Executor {
 
   /**
    * 更新 or 插入 or 删除，由传入的 MappedStatement 的 SQL 所决定
+   *
    * @param ms 我们的执行sql包装对象（MappedStatement）
    * @param parameter 执行的参数
    * @return
@@ -57,6 +58,7 @@ public interface Executor {
 
   /**
    * 查询带缓存key查询
+   *
    * @param ms 我们的执行sql包装对象（MappedStatement）
    * @param parameter:参数
    * @param rowBounds 逻辑分页参数
@@ -70,6 +72,7 @@ public interface Executor {
 
   /**
    * 不走缓存查询
+   *
    * @param ms 我们的执行sql包装对象（MappedStatement）
    * @param parameter:参数
    * @param rowBounds 逻辑分页参数
@@ -81,6 +84,7 @@ public interface Executor {
 
   /**
    * 调用存过查询返回游标对象
+   *
    * @param ms 我们的执行sql包装对象（MappedStatement）
    * @param parameter:参数
    * @param rowBounds 逻辑分页参数
@@ -91,37 +95,90 @@ public interface Executor {
 
   /**
    * 刷入批处理语句
+   *
    * @return List<BatchResult>
    * @throws SQLException
    */
   List<BatchResult> flushStatements() throws SQLException;
 
-  //提交事务
+  /**
+   * 提交事务
+   *
+   * @param required
+   * @throws SQLException
+   */
   void commit(boolean required) throws SQLException;
 
-  //回滚事务
+  /**
+   * 回滚事务
+   *
+   * @param required
+   * @throws SQLException
+   */
   void rollback(boolean required) throws SQLException;
 
-  //创建缓存key
+  /**
+   * 创建缓存key
+   *
+   * @param ms
+   * @param parameterObject
+   * @param rowBounds
+   * @param boundSql
+   * @return
+   */
   CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql);
 
-  // 判断是否缓存
+  /**
+   * 判断是否缓存
+   *
+   * @param ms
+   * @param key
+   * @return
+   */
   boolean isCached(MappedStatement ms, CacheKey key);
-  // 清除本地缓存
+
+  /**
+   * 清除本地缓存
+   */
   void clearLocalCache();
 
-  // 延迟加载
+  /**
+   * 延迟加载
+   *
+   * @param ms
+   * @param resultObject
+   * @param property
+   * @param key
+   * @param targetType
+   */
   void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType);
 
-  //获取一个事务
+  /**
+   * 获取一个事务
+   *
+   * @return
+   */
   Transaction getTransaction();
-  // 关闭事务
+
+  /**
+   * 关闭事务
+   *
+   * @param forceRollback
+   */
   void close(boolean forceRollback);
 
-  //判断是否关闭
+  /**
+   * 判断是否关闭
+   *
+   * @return
+   */
   boolean isClosed();
 
-  // 设置包装的 Executor 对象
+  /**
+   * 设置包装的 Executor 对象
+   *
+   * @param executor
+   */
   void setExecutorWrapper(Executor executor);
 
 }

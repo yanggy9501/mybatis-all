@@ -3,10 +3,6 @@ package com.mybatis.demo.map;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/***
- * @Author 徐庶   QQ:1092002729
- * @Slogan 致敬大师，致敬未来的你
- */
 public class LinkedHashMapTest {
 
     public static void main(String[] args) {
