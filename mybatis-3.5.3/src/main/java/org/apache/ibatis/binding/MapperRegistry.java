@@ -15,16 +15,12 @@
  */
 package org.apache.ibatis.binding;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
+
+import java.util.*;
 
 /**
  * @author Clinton Begin
@@ -42,6 +38,7 @@ public class MapperRegistry {
 
   /**
    * 方法实现说明:通过class类型和sqlSessionTemplate获取我们的Mapper(代理对象)
+   *
    * @author:xsls
    * @param type:Mapper的接口类型
    * @param sqlSession:接口类型实际上是我们的sqlSessionTemplate类型
@@ -51,18 +48,18 @@ public class MapperRegistry {
    */
   @SuppressWarnings("unchecked")
   public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
-    /**
+    /*
      * 直接去缓存knownMappers中通过Mapper的class类型去找我们的mapperProxyFactory
      */
     final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
-    /**
+    /*
      * 缓存中没有获取到 直接抛出异常
      */
     if (mapperProxyFactory == null) {
       throw new BindingException("Type " + type + " is not known to the MapperRegistry.");
     }
     try {
-      /**
+      /*
        * 通过MapperProxyFactory来创建我们的实例
        */
       return mapperProxyFactory.newInstance(sqlSession);

@@ -120,8 +120,7 @@ public class XMLConfigBuilder extends BaseBuilder {
      */
     parsed = true;
     /*
-     * 解析我们的mybatis-config.xml的
-     * 节点
+     * 解析我们的mybatis-config.xml的节点
      * <configuration>
      *
      * </configuration>

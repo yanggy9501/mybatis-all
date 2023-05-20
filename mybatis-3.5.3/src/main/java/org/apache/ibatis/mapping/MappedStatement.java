@@ -29,24 +29,51 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * mapper.xml 文件封装
+ * mapper.xml 中 sql 标签的解析结果封装
  *
  * @author Clinton Begin
  */
 public final class MappedStatement {
+  /**
+   * mapper配置文件名，如：UserMapper.xml
+   */
+  private String resource;
+  private Configuration configuration;
 
-  private String resource;//mapper配置文件名，如：UserMapper.xml
-  private Configuration configuration;//全局配置
-  private String id;//节点的id属性加命名空间,如：com.lucky.mybatis.dao.UserMapper.selectByExample
+  /**
+   * 节点的 id 属性加命名空间,如：com.lucky.mybatis.dao.UserMapper.selectByExample
+   */
+  private String id;
+
   /**
    * 每次从服务器获取的数量
    */
   private Integer fetchSize;
-  private Integer timeout;//超时时间
-  private StatementType statementType;//操作SQL的对象的类型
-  private ResultSetType resultSetType;//结果类型
-  private SqlSource sqlSource;//sql语句
-  private Cache cache;//缓存
+
+  /**
+   * 超时时间
+   */
+  private Integer timeout;
+
+  /**
+   * 操作SQL的对象的类型，INSET | UPDATE | DELETE | SELECT
+   */
+  private StatementType statementType;
+
+  /**
+   * 结果类型
+   */
+  private ResultSetType resultSetType;
+
+  /**
+   * sql语句
+   */
+  private SqlSource sqlSource;
+
+  /**
+   * 该 SQL 查询结果的缓存
+   */
+  private Cache cache;
   private ParameterMap parameterMap;
   private List<ResultMap> resultMaps;
   private boolean flushCacheRequired;

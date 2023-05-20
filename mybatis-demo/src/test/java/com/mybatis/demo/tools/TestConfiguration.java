@@ -49,9 +49,9 @@ public class TestConfiguration {
         PooledDataSource dataSource = new PooledDataSource();
         Environment environment = new Environment("development", transactionFactory, dataSource);
         dataSource.setDriver(configuration.getVariables().getProperty("driver"));
-        dataSource.setDriver(configuration.getVariables().getProperty("url"));
-        dataSource.setDriver(configuration.getVariables().getProperty("username"));
-        dataSource.setDriver(configuration.getVariables().getProperty("password"));
+        dataSource.setUrl(configuration.getVariables().getProperty("url"));
+        dataSource.setUsername(configuration.getVariables().getProperty("username"));
+        dataSource.setPassword(configuration.getVariables().getProperty("password"));
         configuration.setEnvironment(environment);
 
         // mapper 接口的配置

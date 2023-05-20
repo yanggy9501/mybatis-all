@@ -15,15 +15,6 @@
  */
 package org.apache.ibatis.binding;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.cursor.Cursor;
@@ -37,6 +28,15 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Clinton Begin
@@ -72,6 +72,7 @@ public class MapperMethod {
 
   /**
    * 方法实现说明:执行我们的目标方法
+   *
    * @author:sqlSession:我们的sqlSessionTemplate
    * @param args:方法参数
    * @return:Object
@@ -80,51 +81,46 @@ public class MapperMethod {
    */
   public Object execute(SqlSession sqlSession, Object[] args) {
     Object result;
-    /**
-     * 判断我们执行sql命令的类型
-     */
+     // 判断我们执行sql命令的类型
     switch (command.getType()) {
-      //insert操作
+      // insert操作
       case INSERT: {
         Object param = method.convertArgsToSqlCommandParam(args);
         result = rowCountResult(sqlSession.insert(command.getName(), param));
         break;
       }
-      //update操作
+      // update操作
       case UPDATE: {
         Object param = method.convertArgsToSqlCommandParam(args);
         result = rowCountResult(sqlSession.update(command.getName(), param));
         break;
       }
-      //delete操作
+      // delete操作
       case DELETE: {
         Object param = method.convertArgsToSqlCommandParam(args);
         result = rowCountResult(sqlSession.delete(command.getName(), param));
         break;
       }
-      //select操作
+      // select操作
       case SELECT:
-        //返回值为空
+        // 返回值为空
         if (method.returnsVoid() && method.hasResultHandler()) {
           executeWithResultHandler(sqlSession, args);
           result = null;
         } else if (method.returnsMany()) {
-          //返回值是一个List
+          // 返回值是一个List
           result = executeForMany(sqlSession, args);
         } else if (method.returnsMap()) {
-          //返回值是一个map
+          // 返回值是一个map
           result = executeForMap(sqlSession, args);
         } else if (method.returnsCursor()) {
-          //返回游标
+          // 返回游标
           result = executeForCursor(sqlSession, args);
         } else {
           //查询返回单个
-
-          /**
-           * 解析我们的参数
-           */
+          // 解析我们的参数
           Object param = method.convertArgsToSqlCommandParam(args);
-          /**
+          /*
            * 通过调用sqlSessionTemplate来执行我们的sql
            * 第一步:获取我们的statmentName(com.tuling.mapper.EmployeeMapper.findOne)
            * 然后我们就需要重点研究下SqlSessionTemplate是怎么来的?

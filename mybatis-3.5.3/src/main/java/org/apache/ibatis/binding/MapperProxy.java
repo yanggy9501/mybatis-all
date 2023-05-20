@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.binding;
 
+import org.apache.ibatis.reflection.ExceptionUtil;
+import org.apache.ibatis.session.SqlSession;
+
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
@@ -22,9 +25,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
-
-import org.apache.ibatis.reflection.ExceptionUtil;
-import org.apache.ibatis.session.SqlSession;
 
 /**
  * @author Clinton Begin
@@ -37,7 +37,12 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
       | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC;
   private static Constructor<Lookup> lookupConstructor;
   private final SqlSession sqlSession;
+
+  /**
+   * maper 接口类型
+   */
   private final Class<T> mapperInterface;
+
   /**
    * 用于缓存我们的MapperMethod方法
    */
@@ -64,7 +69,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   }
 
   /**
-   * 方法实现说明:我们的Mapper接口调用我们的目标对象
+   * 方法实现说明:我们的 Mapper 接口调用我们的目标对象
+   *
    * @author:xsls
    * @param proxy 代理对象
    * @param method:目标方法
@@ -75,27 +81,24 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
-      /**
-       * 判断我们的方法是不是我们的Object类定义的方法，若是直接通过反射调用
-       */
+       // 判断我们的方法是不是我们的Object类定义的方法，若是直接通过反射调用
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, args);
-      } else if (method.isDefault()) {   //是否接口的默认方法
-        /**
-         * 调用我们的接口中的默认方法
-         */
+      } else if (method.isDefault()) {
+        // 是否接口的默认方法
+        // 调用我们的接口中的默认方法
         return invokeDefaultMethod(proxy, method, args);
       }
     } catch (Throwable t) {
       throw ExceptionUtil.unwrapThrowable(t);
     }
-    /**
+    /*
      * 真正的进行调用,做了二个事情
      * 第一步:把我们的方法对象封装成一个MapperMethod对象(带有缓存作用的)
      */
     final MapperMethod mapperMethod = cachedMapperMethod(method);
-    /**
-     *通过sqlSessionTemplate来调用我们的目标方法
+    /*
+     * 通过sqlSessionTemplate来调用我们的目标方法
      * 那么我们就需要去研究下sqlSessionTemplate是什么初始化的
      * 我们知道spring 跟mybatis整合的时候，进行了偷天换日
      * 把我们mapper接口包下的所有接口类型都变为了MapperFactoryBean
