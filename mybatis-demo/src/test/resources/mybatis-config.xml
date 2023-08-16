@@ -7,10 +7,12 @@
         <property name="myKey" value="myValue"/>
     </properties>
 
-    <!-- settings -->
+    <!-- mybatis 配置项 -->
     <settings>
-        <setting name="logImpl" value="SLF4J"/>
+        <!-- 数据库列的下划线字段名自动转驼峰 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 选用slf4j的日志门面，门面模式自动找日志的实现 -->
+        <setting name="logImpl" value="SLF4J"/>
     </settings>
 
     <!-- 别名指定 -->
@@ -19,12 +21,17 @@
         <typeAlias type="com.mybatis.demo.entity.User" alias="user" />
         <!-- 批量默认指定：类名首字母小写 -->
         <package name="com.mybatis.demo.entity"/>
-        <!-- 可以使用 @Alias 注解 -->
     </typeAliases>
+
+    <!-- 类型转换器 -->
+    <typeHandlers>
+        <typeHandler handler="com.mybatis.demo.handler.StringWithCommaToListTypeHandler" />
+    </typeHandlers>
 
     <!-- 插件配置 -->
    <plugins>
-       <plugin interceptor="com.mybatis.demo.plugins.ExamplePlugin" />
+<!--       <plugin interceptor="com.mybatis.demo.plugins.ExamplePlugin" />-->
+       <plugin interceptor="com.mybatis.demo.plugins.SqlCostTimeInterceptor" />
     </plugins>
 
     <!-- 环境配置 -->
@@ -42,8 +49,6 @@
         </environment>
     </environments>
 
-
-
     <!-- mapper.xml 映射文件指定 -->
     <mappers>
         <!--1. 必须保证接口名和xml名（IUserDao.xml）相同，还必须在同一个包中，通过mapper的接口的全限定名称取找 mapper.xml -->
@@ -59,6 +64,7 @@
          4.不推荐:引用网路路径或者磁盘路径下的sql映射文件 file:///var/mappers/AuthorMapper.xml
          <mapper url="file:E:/Study/myeclipse/_03_Test/src/cn/sdut/pojo/PersonMapper.xml"/>
          -->
+
     </mappers>
 </configuration>
 

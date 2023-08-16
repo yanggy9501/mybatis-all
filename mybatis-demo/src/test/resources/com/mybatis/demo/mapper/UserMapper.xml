@@ -23,16 +23,17 @@
         <!-- 每一条就是一个 resultMapping -->
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="roles" jdbcType="VARCHAR" property="roles" typeHandler="com.mybatis.demo.handler.StringWithCommaToListTypeHandler"/>
         <result column="create_time" jdbcType="DATE" property="createTime"/>
         <!--<collection property="" select=""-->
     </resultMap>
 
     <insert id="insert">
-        insert into `user` values (null, #{username}, #{createTime})
+        insert into `user` values (null, #{username}, #{roles, typeHandler=com.mybatis.demo.handler.StringWithCommaToListTypeHandler},#{createTime})
     </insert>
 
     <select id="selectById" resultMap="result"  >
-        select id,user_name,create_time from t_user
+        select id, username, roles, create_time from user
         <where>
             <if test="id > 0">
                 and id=#{id}

@@ -60,15 +60,15 @@ public class TypeParameterResolver {
    * @date:2019/9/8 13:57
    */
   public static Type resolveReturnType(Method method, Type srcType) {
-    /**
+    /*
      * 返回值的类型
      */
     Type returnType = method.getGenericReturnType();
-    /**
+    /*
      * 接口类型
      */
     Class<?> declaringClass = method.getDeclaringClass();
-    /**
+    /*
      * 解析我们的返回值
      */
     return resolveType(returnType, srcType, declaringClass);
@@ -103,7 +103,7 @@ public class TypeParameterResolver {
    * @date:2019/9/8 15:21
    */
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
-    /**
+    /*
      * 是不是类型变量
      */
     if (type instanceof TypeVariable) {
