@@ -168,6 +168,9 @@ public class Configuration {
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
+  /**
+   * key=namespace.id, value=MappedStatement(增删改查等标签的解析结果)
+   */
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
       .conflictMessageProducer((savedValue, targetValue) ->
           ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
@@ -179,6 +182,9 @@ public class Configuration {
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
 
+  /**
+   * 已经加载的资源，如 mapper 接口 对应的xml
+   */
   protected final Set<String> loadedResources = new HashSet<>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
 
@@ -836,13 +842,10 @@ public class Configuration {
   }
 
   public boolean hasStatement(String statementName, boolean validateIncompleteStatements) {
-    //todo 暂时还不明确这个校验的作用
+    // todo 暂时还不明确这个校验的作用
     if (validateIncompleteStatements) {
       buildAllStatements();
     }
-    /**
-     * 去mappedStatments的map中判断mappedStatements是存在
-     */
     return mappedStatements.containsKey(statementName);
   }
 

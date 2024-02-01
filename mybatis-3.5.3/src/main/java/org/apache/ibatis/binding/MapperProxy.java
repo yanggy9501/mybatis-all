@@ -30,16 +30,21 @@ import java.util.Map;
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
+/**xxx: Mapper 接口的代理 */
 public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   private static final long serialVersionUID = -6424540398559729838L;
   private static final int ALLOWED_MODES = MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
       | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC;
   private static Constructor<Lookup> lookupConstructor;
+
+  /**
+   * sqlSession 用于数据库操作
+   */
   private final SqlSession sqlSession;
 
   /**
-   * maper 接口类型
+   * mapper 接口类型
    */
   private final Class<T> mapperInterface;
 
@@ -71,12 +76,10 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   /**
    * 方法实现说明:我们的 Mapper 接口调用我们的目标对象
    *
-   * @author:xsls
    * @param proxy 代理对象
    * @param method:目标方法
    * @param args :目标对象参数
    * @return:Object
-   * @exception:
    */
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -85,7 +88,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, args);
       } else if (method.isDefault()) {
-        // 是否接口的默认方法
+        // 是否是接口的默认方法
         // 调用我们的接口中的默认方法
         return invokeDefaultMethod(proxy, method, args);
       }
@@ -115,16 +118,14 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   /**
    * 方法实现说明:缓存我们mapper中的方法
-   * @author:xsls
    * @param method:我们Mapper接口中的方法
    * @return:MapperMethod
    * @exception:
-   * @date:2019/9/6 21:42
    */
   private MapperMethod cachedMapperMethod(Method method) {
     /**
      * 相当于这句代码.jdk8的新写法
-     * if(methodCache.get(method)==null){
+     * if (methodCache.get(method) == null) {
      *     methodCache.put(new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()))
      * }
      */

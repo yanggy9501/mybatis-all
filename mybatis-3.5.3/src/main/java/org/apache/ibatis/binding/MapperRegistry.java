@@ -30,6 +30,11 @@ import java.util.*;
 public class MapperRegistry {
 
   private final Configuration config;
+
+  /**
+   * 已知的 mapper
+   * key=mapper接口的类对象,  value=mapper接口的代理对象工厂
+   */
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
   public MapperRegistry(Configuration config) {
@@ -48,20 +53,14 @@ public class MapperRegistry {
    */
   @SuppressWarnings("unchecked")
   public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
-    /*
-     * 直接去缓存knownMappers中通过Mapper的class类型去找我们的mapperProxyFactory
-     */
+    // 直接去已经解析好的缓存knownMappers中通过Mapper的class类型去找我们的mapperProxyFactory
     final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
-    /*
-     * 缓存中没有获取到 直接抛出异常
-     */
+    // 缓存中没有获取到直接抛出异常
     if (mapperProxyFactory == null) {
       throw new BindingException("Type " + type + " is not known to the MapperRegistry.");
     }
     try {
-      /*
-       * 通过MapperProxyFactory来创建我们的实例
-       */
+      // 通过MapperProxyFactory来创建我们的实例
       return mapperProxyFactory.newInstance(sqlSession);
     } catch (Exception e) {
       throw new BindingException("Error getting mapper instance. Cause: " + e, e);

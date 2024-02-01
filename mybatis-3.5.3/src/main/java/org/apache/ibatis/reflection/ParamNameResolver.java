@@ -15,6 +15,12 @@
  */
 package org.apache.ibatis.reflection;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -22,12 +28,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.binding.MapperMethod.ParamMap;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-
+/**
+ * 参数解析器
+ */
 public class ParamNameResolver {
 
   private static final String GENERIC_NAME_PREFIX = "param";
@@ -50,19 +53,13 @@ public class ParamNameResolver {
   private boolean hasParamAnnotation;
 
   public ParamNameResolver(Configuration config, Method method) {
-    /**
-     * 解析我们的参数的类型
-     */
+    // 解析我们的参数的类型
     final Class<?>[] paramTypes = method.getParameterTypes();
-    /**
-     * 解析我们方法上的@Param注解
-     */
+    // 解析我们方法上的 @Param 注解
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<>();
     int paramCount = paramAnnotations.length;
-    /**
-     * 解析我们标注了@Param注解
-     */
+    // 解析我们标注了@Param注解
     // get names from @Param annotations
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
       if (isSpecialParameter(paramTypes[paramIndex])) {
@@ -90,10 +87,6 @@ public class ParamNameResolver {
       }
       map.put(paramIndex, name);
     }
-    /**
-     *Dept findDeptByIdAndName(@Param("id") Integer id,@Param("name") String name);
-     * 变为Map   {0,id},{1,name}
-     */
     names = Collections.unmodifiableSortedMap(map);
   }
 

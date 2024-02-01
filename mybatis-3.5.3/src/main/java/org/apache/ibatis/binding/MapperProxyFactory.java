@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * MapperProxyFactory 用于创建 mapper 接口的代理对象
+ *
  * @author Lasse Voss
  */
 public class MapperProxyFactory<T> {

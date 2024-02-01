@@ -44,13 +44,7 @@ import java.util.Optional;
  * @author Lasse Voss
  * @author Kazuki Shimizu
  */
-/**
-* @vlog: 高于生活，源于生活
-* @desc: 类的描述:用于封装我们的Mapper接口中的方法对象
-* @author: xsls
-* @createDate: 2019/9/6 21:46
-* @version: 1.0
-*/
+//  Mapper接口中的一方法对象的封装
 public class MapperMethod {
 
   /**
@@ -60,13 +54,9 @@ public class MapperMethod {
   private final MethodSignature method;
 
   public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
-    /**
-     * 创建我们的SqlCommand对象
-     */
+    // SqlCommand对象(Mapper 接口的方法信息)
     this.command = new SqlCommand(config, mapperInterface, method);
-    /**
-     * 创建我们的方法签名对象
-     */
+    // 创建我们的方法签名对象
     this.method = new MethodSignature(config, mapperInterface, method);
   }
 
@@ -263,20 +253,20 @@ public class MapperMethod {
   }
 
   /**
-   * 用户保存我们Mapper接口方法信息
+   * Mapper 接口方法信息
    */
   public static class SqlCommand {
     /**
-     * 接口的方法名全路径比如:com.tuling.mapper.DeptMapper.findDepts
+     * 接口的方法名全路径比 如:com.xxx.mapper.DeptMapper.findDepts
      */
     private final String name;
     /**
-     * 对应接口方法操作的sql类型(是insert|update|delte|select)
+     * 对应接口方法操作的sql类型(是insert|update|delete|select)
      */
     private final SqlCommandType type;
 
     /**
-     * 方法实现说明:创建我们的SqlCommand
+     * 方法实现说明:创建的SqlCommand
      * @author:xsls
      * @param configuration：mybatis的全局配置
      * @param mapperInterface:我们Mapper接口的class类型
@@ -286,15 +276,12 @@ public class MapperMethod {
      * @date:2019/9/6 21:51
      */
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
-      //获取我们的方法的名称
+      // 获取我们的方法的名称
       final String methodName = method.getName();
-      //方法所在接口的类型
+      // 方法所在接口的类型
       final Class<?> declaringClass = method.getDeclaringClass();
-      /**
-       * 根据接口,方法名称解析出我们对应的mapperStatment对象
-       */
-      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
-          configuration);
+      // 根据接口,方法名称解析出我们对应的 MappedStatement 对象
+      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass, configuration);
       if (ms == null) {
         if (method.getAnnotation(Flush.class) != null) {
           name = null;
@@ -304,9 +291,8 @@ public class MapperMethod {
               + mapperInterface.getName() + "." + methodName);
         }
       } else {
-        //把我们的mappedStatmentID（com.tuling.mapper.EmpMapper.findEmp）
         name = ms.getId();
-        //sql操作的类型(比如insert|delete|update|select)
+        // sql操作的类型(insert|delete|update|select)
         type = ms.getSqlCommandType();
         if (type == SqlCommandType.UNKNOWN) {
           throw new BindingException("Unknown execution method for: " + name);
@@ -323,7 +309,7 @@ public class MapperMethod {
     }
 
     /**
-     * 方法实现说明:解析我们的mappedStatment对象
+     * 方法实现说明:解析我们的 MappedStatement(增删改查标签的解析结果) 对象
      * @author:xsls
      * @param mapperInterface:我们mapper接口的class类型
      * @param methodName :方法名称
@@ -335,11 +321,11 @@ public class MapperMethod {
      */
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
-      //获取我们的sql对应的statmentId(com.tuling.mapper.DeptMapper.findDepts)
+      // 获取我们的sql对应的 statementId
       String statementId = mapperInterface.getName() + "." + methodName;
-      //根据我们的statmentId判断我们的主配置类是否包含 了我们的mapperStatment对象
+      // 根据我们的 statementId 判断我们的主配置类是否包含了我们的 MappedStatement 对象
       if (configuration.hasStatement(statementId)) {
-        //存在通过key获取对应的mapperStatment对象返回
+        // 存在通过key获取对应的 MappedStatement 对象返回
         return configuration.getMappedStatement(statementId);
       } else if (mapperInterface.equals(declaringClass)) {
         return null;
@@ -362,6 +348,9 @@ public class MapperMethod {
     }
   }
 
+  /**
+   * 方法签名
+   */
   public static class MethodSignature {
 
     private final boolean returnsMany;
@@ -386,45 +375,39 @@ public class MapperMethod {
      * @date:2019/9/8 13:45
      */
     public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
-      /**
-       * 解析方法的返回值类型
-       */
+      // 解析方法的返回值类型
       Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
-      //判断返回值是不是class类型的
+      // 判断返回值是不是class类型的
       if (resolvedReturnType instanceof Class<?>) {
         this.returnType = (Class<?>) resolvedReturnType;
       } else if (resolvedReturnType instanceof ParameterizedType) {
-        //是不是参数泛型的
+        // 是不是参数泛型的
         this.returnType = (Class<?>) ((ParameterizedType) resolvedReturnType).getRawType();
       } else {
-        //普通的
+        // 普通的
         this.returnType = method.getReturnType();
       }
-      //返回值是不是为空
+      // 返回值是不是为空
       this.returnsVoid = void.class.equals(this.returnType);
-      //返回是是不是集合类型
+      // 返回是是不是集合类型
       this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();
-      //返回值是不是游标
+      // 返回值是不是游标(流式处理)
       this.returnsCursor = Cursor.class.equals(this.returnType);
-      //返回值是不是optionnal类型的
+      // 返回值是不是 optional 类型的
       this.returnsOptional = Optional.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = this.mapKey != null;
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
-      /**
-       * 初始化我们参数解析器对象
-       */
+
+      // 初始化我们参数解析器对象
       this.paramNameResolver = new ParamNameResolver(configuration, method);
     }
 
     /**
      * 方法实现说明:通过我们的参数解析器解析方法的参数
-     * @author:xsls
      * @param args:参数数组
      * @return: Object处理后的参数
-     * @exception:
-     * @date:2019/9/8 17:15
      */
     public Object convertArgsToSqlCommandParam(Object[] args) {
       return paramNameResolver.getNamedParams(args);

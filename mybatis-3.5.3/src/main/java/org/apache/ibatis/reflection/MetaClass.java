@@ -29,6 +29,7 @@ import java.util.Collection;
 /**
  * @author Clinton Begin
  */
+// 类的源数据消息
 public class MetaClass {
 
   /**

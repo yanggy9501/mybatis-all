@@ -45,29 +45,27 @@ public class TypeParameterResolver {
    *         they will be resolved to the actual runtime {@link Type}s.
    */
   /**
-   * 方法实现说明:解析我们的返回值的类型
-   * Type是Java语言中所有类型的父接口，包括
+    方法实现说明:解析我们的返回值的类型
+    Type是Java语言中所有类型的父接口，包括
         raw types(原始类型，包括类，枚举，接口，注解，数组（但不包括泛型数组）),
         parameterized types（参数化类型，如Set<String>,Map<String,String>,Class<?>）,
         array types(泛型数组和参数类型数组，如T[],List<String>[]),
         type variables(类型变量，如T，K，V) and
         primitive types（基本类型，如boolean,char,byte,short,int,long,float,double
-   * @author:xsls
-   * @param method:调用方法对象
-   * @param srcType:方法所主的原生接口
-   * @return:Type
-   * @exception:
-   * @date:2019/9/8 13:57
+    @param method:调用方法对象
+    @param srcType:方法所主的原生接口
    */
   public static Type resolveReturnType(Method method, Type srcType) {
     /*
      * 返回值的类型
      */
     Type returnType = method.getGenericReturnType();
+
     /*
      * 接口类型
      */
     Class<?> declaringClass = method.getDeclaringClass();
+
     /*
      * 解析我们的返回值
      */

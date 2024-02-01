@@ -265,7 +265,7 @@ public class XMLConfigBuilder extends BaseBuilder {
        url:来指定我们磁盘下的或者网络资源的
        class:
        若注册Mapper不带xml文件的,这里可以直接注册
-       若注册的Mapper带xml文件的，需要把xml文件和mapper文件同名 同路径
+       若注册的Mapper带xml文件的，需要把xml文件和mapper文件同名同路径
        -->
        <mappers>
           <mapper resource="mybatis/mapper/EmployeeMapper.xml"/>
