@@ -71,23 +71,15 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   /**
    * 方法实现说明:真正的去解析我们的Mapper.xml(EmployeeMapper.xml)
-   * @author:xsls
    * @return:
    * @exception:
-   * @date:2019/8/30 16:43
    */
   public void parse() {
-    /*
-     * 判断当前的Mapper是否被加载过
-     */
+    // 判断当前的Mapper是否被加载过
     if (!configuration.isResourceLoaded(resource)) {
-      /*
-       * 真正的解析我们的 <mapper namespace="com.xxx.mapper.EmployeeMapper">
-       */
+      // 真正的解析我们的 <mapper namespace="com.xxx.mapper.EmployeeMapper">
       configurationElement(parser.evalNode("/mapper"));
-      /*
-       * 把资源保存到我们Configuration中
-       */
+      // 把资源保存到我们Configuration中
       configuration.addLoadedResource(resource);
 
       bindMapperForNamespace();
@@ -104,11 +96,9 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   /**
    * 方法实现说明:解析我们的<mapper></mapper>节点
-   * @author:xsls
    * @param context document节点
    * @return:
    * @exception:
-   * @date:2019/8/31 13:34
    */
   private void configurationElement(XNode context) {
     try {
@@ -139,9 +129,8 @@ public class XMLMapperBuilder extends BaseBuilder {
                  org.apache.ibatis.builder.MapperBuilderAssistant#currentCache
        */
       cacheElement(context.evalNode("cache"));
-      /*
-       * 解析parameterMap节点(该节点mybaits3.5貌似不推荐使用了)
-       */
+
+      // 解析parameterMap节点(该节点mybatis3.5貌似不推荐使用了)
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       /*
        * 解析我们的resultMap节点
@@ -168,9 +157,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private void buildStatementFromContext(List<XNode> list) {
-    /**
-     * 判断有没有配置数据库厂商ID
-     */
+    // 判断有没有配置数据库厂商ID
     if (configuration.getDatabaseId() != null) {
       buildStatementFromContext(list, configuration.getDatabaseId());
     }
@@ -178,23 +165,16 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   /**
-   * 方法实现说明:解析我们得得select|update|delte|insert节点然后
-   * 创建我们得mapperStatment对象
-   * @author:xsls
-   * @param list:所有的select|update|delte|insert节点
+   * 方法实现说明:解析我们得得select|update|delete|insert节点然后创建 mapperStatement 对象
+   * @param list:所有的select|update|delete|insert节点
    * @param requiredDatabaseId:判断有没有数据库厂商Id
    * @return:
    * @exception:
-   * @date:2019/9/5 21:35
    */
   private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
-    /**
-     * 循环我们的select|delte|insert|update节点
-     */
+    // 循环我们的select|delete|insert|update节点
     for (XNode context : list) {
-      /**
-       * 创建一个xmlStatement的构建器对象
-       */
+      // 创建一个xmlStatement的构建器对象
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context, requiredDatabaseId);
       try {
         statementParser.parseStatementNode();
@@ -250,26 +230,20 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   /**
-   * 方法实现说明:处理缓存引用节点
-   * <cache-ref namespace="com.tuling.mapper.DeptMapper"></cache-ref>
-   * @author:xsls
+   * 处理缓存引用节点
    * @param context:缓存引用节点
    * @return:
    * @exception:
-   * @date:2019/8/31 13:37
    */
   private void cacheRefElement(XNode context) {
     if (context != null) {
       /**
-       * 把namespace保存到我们的缓存引用中map中
+       * 把 namespace保存到我们的缓存引用中map中
        * key:当前的mapper引用,value:缓存引用到的mapper
-       * Key:com.tuling.mapper.Employee,value:com.tuling.mapper.DeptMapper
+       * 如 Key:com.xxx.mapper.Employee,value:com.xxx.mapper.DeptMapper
        */
       configuration.addCacheRef(builderAssistant.getCurrentNamespace(), context.getStringAttribute("namespace"));
-      /**
-       * 通过builderAssistant构建辅助类    缓存引用namespace创建我们的
-       * CacheRefResolver
-       */
+      // 通过builderAssistant构建辅助类缓存引用namespace创建我们的 CacheRefResolver
       CacheRefResolver cacheRefResolver = new CacheRefResolver(builderAssistant, context.getStringAttribute("namespace"));
       try {
         //解析缓存引用的cache
@@ -281,17 +255,11 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   /**
-   * 方法实现说明:解析缓存属性
-   *    <cache type=""
-   eviction="FIFO"
-   flushInterval="60000"
-   size="512"
-   readOnly="true"/>
-   * @author:xsls
+   * 解析缓存属性
+   *  <cache type=""eviction="FIFO" flushInterval="60000"size="512" readOnly="true"/>
    * @param context:cache节点
    * @return:
    * @exception:
-   * @date:2019/8/31 14:13
    */
   private void cacheElement(XNode context) {
     if (context != null) {
@@ -365,12 +333,12 @@ public class XMLMapperBuilder extends BaseBuilder {
   private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings, Class<?> enclosingType)
       throws Exception {
     ErrorContext.instance().activity("processing " + resultMapNode.getValueBasedIdentifier());
-    // 从这里可以看出， 类型可以通过这4个属性设置
+    // 从这里可以看出，类型可以通过这4个属性设置
     String type = resultMapNode.getStringAttribute("type",
       resultMapNode.getStringAttribute("ofType",
         resultMapNode.getStringAttribute("resultType",
           resultMapNode.getStringAttribute("javaType"))));
-    // 根据别名 或 完全类名  获取类型
+    // 根据别名或完全类名获取类型
     Class<?> typeClass = resolveClass(type);
     if (typeClass == null) {
       typeClass = inheritEnclosingType(resultMapNode, enclosingType);
@@ -399,8 +367,8 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
-    String id = resultMapNode.getStringAttribute("id",
-      resultMapNode.getValueBasedIdentifier());
+
+    String id = resultMapNode.getStringAttribute("id", resultMapNode.getValueBasedIdentifier());
     String extend = resultMapNode.getStringAttribute("extends");
     Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
     ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator, resultMappings, autoMapping);

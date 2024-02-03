@@ -44,12 +44,10 @@ public class MapperRegistry {
   /**
    * 方法实现说明:通过class类型和sqlSessionTemplate获取我们的Mapper(代理对象)
    *
-   * @author:xsls
    * @param type:Mapper的接口类型
    * @param sqlSession:接口类型实际上是我们的sqlSessionTemplate类型
    * @return:
    * @exception:
-   * @date:2019/8/22 20:41
    */
   @SuppressWarnings("unchecked")
   public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
@@ -69,48 +67,37 @@ public class MapperRegistry {
 
   /**
    * 方法实现说明:我们的Mapper接口是否保存在knownMappers  Map集合中
-   * @author:xsls
    * @param type:我们的Mapper接口
    * @return: true or false
    * @exception:
-   * @date:2019/8/22 20:28
    */
   public <T> boolean hasMapper(Class<T> type) {
     return knownMappers.containsKey(type);
   }
 
   /**
-   * 方法实现说明:把我们的Mapper class保存到我们的knownMappers map 中
-   * @author:xsls
+   * 把我们的 Mapper class保存到我们的 knownMappers map 中
    * @param type:我们的Mapper接口
    * @return:
    * @exception:
-   * @date:2019/8/22 20:29
    */
   public <T> void addMapper(Class<T> type) {
-    /**
-     * 判断我们传入进来的type类型是不是接口
-     */
+    // 判断我们传入进来的type类型是不是接口
     if (type.isInterface()) {
-      /**
-       * 判断我们的缓存中有没有该类型
-       */
+      // 判断我们的缓存中有没有该类型
       if (hasMapper(type)) {
         throw new BindingException("Type " + type + " is already known to the MapperRegistry.");
       }
       boolean loadCompleted = false;
       try {
-        /**
-         * 创建一个MapperProxyFactory 把我们的Mapper接口保存到工厂类中， 该工厂用于创建 MapperProxy
-         */
+        // 创建一个 MapperProxyFactory 把我们的 Mapper 接口保存到工厂类中， 该工厂用于创建 mapper 接口的代理对象 MapperProxy
         knownMappers.put(type, new MapperProxyFactory<>(type));
         // It's important that the type is added before the parser is run
         // otherwise the binding may automatically be attempted by the
-        // mapper parser. If the type is already known, it won't try.    mapper注解构造器
+        // mapper parser. If the type is already known, it won't try.
+        // mapper 注解构造器
         MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
-        /**
-         * 进行解析, 将接口完整限定名作为xml文件地址去解析
-         */
+        // 进行解析, 将接口完整限定名作为xml文件地址去解析
         parser.parse();
         loadCompleted = true;
       } finally {

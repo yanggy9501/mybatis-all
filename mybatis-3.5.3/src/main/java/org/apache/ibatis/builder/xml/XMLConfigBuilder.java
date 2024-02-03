@@ -109,15 +109,11 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public Configuration parse() {
-    /*
-     * 若已经解析过了 就抛出异常
-     */
+    // 若已经解析过了 就抛出异常
     if (parsed) {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
-    /*
-     * 设置解析标志位
-     */
+    // 设置解析标志位
     parsed = true;
     /*
      * 解析我们的mybatis-config.xml的节点
@@ -143,9 +139,11 @@ public class XMLConfigBuilder extends BaseBuilder {
     try {
       /*
        * 解析 properties节点
-       *     <properties resource="mybatis/db.properties" />
-       *     解析到 org.apache.ibatis.parsing.XPathParser#variables
-       *           org.apache.ibatis.session.Configuration#variables
+       *   <properties resource="db.properties">
+       *      <property name="myKey" value="myValue"/>
+       *   </properties>
+       *   解析到 org.apache.ibatis.parsing.XPathParser#variables
+       *         org.apache.ibatis.session.Configuration#variables
        */
       propertiesElement(root.evalNode("properties"));
       /*
@@ -155,7 +153,7 @@ public class XMLConfigBuilder extends BaseBuilder {
             <setting name="cacheEnabled" value="true"/>
             <setting name="lazyLoadingEnabled" value="true"/>
             <setting name="mapUnderscoreToCamelCase" value="false"/>
-            setting name="localCacheScope" value="SESSION"/>
+            <setting name="localCacheScope" value="SESSION"/>
             <setting name="jdbcTypeForNull" value="OTHER"/>
             ..............
          </settings>
@@ -185,7 +183,7 @@ public class XMLConfigBuilder extends BaseBuilder {
           <package name="cn.xxx.pojo"/>
        </typeAliases>
 
-       解析到oorg.apache.ibatis.session.Configuration#typeAliasRegistry.typeAliases
+       解析到 org.apache.ibatis.session.Configuration#typeAliasRegistry.typeAliases
        除了自定义的，还有内置的
        */
       typeAliasesElement(root.evalNode("typeAliases"));

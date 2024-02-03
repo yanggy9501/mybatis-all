@@ -148,7 +148,7 @@ public class Configuration {
   protected Class<?> configurationFactory;
 
   /**
-   * mapper 注册器，注册mapper
+   * mapper 注册器，注册 mapper
    */
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
 
@@ -178,6 +178,14 @@ public class Configuration {
    * 二级缓存：key=mapper.xml的命名空间，value=缓存实现
    */
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
+
+  /**
+   * <resultMap id="result" type="com.mybatis.demo.entity.XXX">
+   *   <id column="id" property="id"/>
+   *   <result column="xxx" property="xxx"/>
+   * </resultMap>
+   * 结果集映射
+   */
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
