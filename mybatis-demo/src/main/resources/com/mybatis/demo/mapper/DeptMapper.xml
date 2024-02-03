@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.demo.mapper.DeptMapper">
+
+    <resultMap id="result" type="com.mybatis.demo.entity.Dept">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+    </resultMap>
+
+    <insert id="insertDept">
+        insert into `t_dept` values (#{id}, #{username})
+    </insert>
+
+    <select id="query1" resultMap="result">
+        select id, dept_name from `t_dept`
+        <where>
+            1 = 1
+            <if test="id > 0">
+                and id=${id}
+            </if>
+            <if test="deptName != null">
+                and dept_name = #{deptName}
+            </if>
+        </where>
+    </select>
+</mapper>
