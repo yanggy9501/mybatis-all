@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
  */
 package org.apache.ibatis.datasource.jndi;
 
-import java.util.Map.Entry;
-import java.util.Properties;
+import org.apache.ibatis.datasource.DataSourceException;
+import org.apache.ibatis.datasource.DataSourceFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-
-import org.apache.ibatis.datasource.DataSourceException;
-import org.apache.ibatis.datasource.DataSourceFactory;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 /**
  * @author Clinton Begin

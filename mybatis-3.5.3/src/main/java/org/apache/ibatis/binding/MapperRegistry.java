@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ public class MapperRegistry {
 
   /**
    * 已知的 mapper
-   * key=mapper接口的类对象,  value=mapper接口的代理对象工厂
+   * key=mapper接口的类对象, value=mapper接口的代理对象工厂
    */
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 

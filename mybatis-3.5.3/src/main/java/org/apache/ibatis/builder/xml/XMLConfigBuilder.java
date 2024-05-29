@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -129,11 +129,7 @@ public class XMLConfigBuilder extends BaseBuilder {
    * 方法实现说明:解析我们mybatis-config.xml的 configuration节点
    * 顺序解析xml的标签 --> xml 的标签位置不能的乱序
    *
-   * @author:xsls
    * @param root:configuration节点对象
-   * @return:
-   * @exception:
-   * @date:2019/8/30 15:57
    */
   private void parseConfiguration(XNode root) {
     try {
@@ -264,12 +260,10 @@ public class XMLConfigBuilder extends BaseBuilder {
        class:
        若注册Mapper不带xml文件的,这里可以直接注册
        若注册的Mapper带xml文件的，需要把xml文件和mapper文件同名同路径
-       -->
        <mappers>
           <mapper resource="mybatis/mapper/EmployeeMapper.xml"/>
           <mapper class="com.xxx.mapper.DeptMapper" />
           <package name="com.xxx.mapper" />
-          -->
        </mappers>
        * package
        *     ·解析mapper接口代理工厂（传入需要代理的接口） 解析到：org.apache.ibatis.session.Configuration#mapperRegistry.knownMappers
@@ -477,7 +471,8 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
-  private TransactionFactory transactionManagerElement(XNode context) throws Exception {
+  private TransactionFactory
+  transactionManagerElement(XNode context) throws Exception {
     if (context != null) {
       String type = context.getStringAttribute("type");  // JDBC
       Properties props = context.getChildrenAsProperties();

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.builder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.GenericTokenParser;
@@ -27,6 +23,10 @@ import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Clinton Begin
@@ -42,7 +42,7 @@ public class SqlSourceBuilder extends BaseBuilder {
   public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
-    // 替换sql中的#{}  替换成问号， 并且会顺便拿到#{}中的参数名解析成ParameterMapping
+    // 替换sql中的#{} 替换成问号 ？并且会顺便拿到 #{} 中的参数名解析成 ParameterMapping
     String sql = parser.parse(originalSql);
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
   }

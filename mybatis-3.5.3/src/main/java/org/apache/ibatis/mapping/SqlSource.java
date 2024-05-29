@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,12 +24,9 @@ package org.apache.ibatis.mapping;
 public interface SqlSource {
 
   /**
-   * 方法实现说明:解析我们原生的sql
-   * @author:xsls
+   * 解析我们原生的sql
+   *
    * @param parameterObject:参数对象
-   * @return:BoundSql
-   * @exception:
-   * @date:2019/9/6 15:29
    */
   BoundSql getBoundSql(Object parameterObject);
 

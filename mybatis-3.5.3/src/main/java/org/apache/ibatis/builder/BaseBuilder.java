@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.builder;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.Configuration;
@@ -27,6 +22,11 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin
@@ -119,11 +119,8 @@ public abstract class BaseBuilder {
 
   /**
    * 方法实现说明:根据别名字符串解析出对应的class类型
-   * @author:xsls
    * @param alias:别名字符串
    * @return: 返回别名对应的class属性
-   * @exception:
-   * @date:2019/9/6 13:58
    */
   protected <T> Class<? extends T> resolveClass(String alias) {
     if (alias == null) {
@@ -167,11 +164,7 @@ public abstract class BaseBuilder {
 
   /**
    * 方法实现说明:真正的解析别名
-   * @author:xsls
-   * @param alias:别名字符串对象
    * @return: 别名对应的class属性
-   * @exception:
-   * @date:2019/9/6 13:59
    */
   protected <T> Class<? extends T> resolveAlias(String alias) {
     /**

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -73,16 +73,12 @@ public class CachingExecutor implements Executor {
   }
 
   /**
-   * 方法实现说明:通过我们的sql执行器对象执行sql
+   * 通过我们的sql执行器对象执行sql
    *
-   * @author:xsls
    * @param ms 用于封装我们一个个的insert|delete|update|select 对象
    * @param parameterObject:参数对象
    * @param rowBounds : mybatis 的逻辑分页对象
    * @param resultHandler:结果处理器对象
-   * @return:
-   * @exception:
-   * @date:2019/9/9 20:39
    */
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {

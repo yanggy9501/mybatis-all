@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.io;
 
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 
 /**
  * <p>ResolverUtil is used to locate classes that are available in the/a class path and meet

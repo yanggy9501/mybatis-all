@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.scripting.defaults;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
-
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -31,6 +27,10 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author Clinton Begin
@@ -72,11 +72,11 @@ public class DefaultParameterHandler implements ParameterHandler {
             value = boundSql.getAdditionalParameter(propertyName);
           } else if (parameterObject == null) {
             value = null;
-            // 如果已经存在该参数的类型处理器那直接设置成value,反正类型处理器会解析value
+          // 如果已经存在该参数的类型处理器那直接设置成value,反正类型处理器会解析value
           } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
             value = parameterObject;
           } else {
-            // 一般情况是个POJO，  需要根据属性名通过反射拿到对象中的属性值
+            // 一般情况是个POJO，需要根据属性名通过反射拿到对象中的属性值
             MetaObject metaObject = configuration.newMetaObject(parameterObject);
             value = metaObject.getValue(propertyName);
           }

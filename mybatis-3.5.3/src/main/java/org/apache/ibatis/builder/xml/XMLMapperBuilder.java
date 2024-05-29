@@ -1,14 +1,17 @@
 /**
- * Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.builder.xml;
 
@@ -117,7 +120,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       /*
        * 解析我们的缓存引用-当前命名空间可以使用其他命名空间的缓存
        * 说明我当前的缓存引用和DeptMapper的缓存引用一致
-       * <cache-ref namespace="com.tuling.mapper.DeptMapper"></cache-ref>
+       * <cache-ref namespace="com.xxx.mapper.DeptMapper"></cache-ref>
             解析到org.apache.ibatis.session.Configuration#cacheRefMap<当前namespace,ref-namespace>
             异常下（引用缓存未使用缓存）：org.apache.ibatis.session.Configuration#incompleteCacheRefs
        */
@@ -168,8 +171,6 @@ public class XMLMapperBuilder extends BaseBuilder {
    * 方法实现说明:解析我们得得select|update|delete|insert节点然后创建 mapperStatement 对象
    * @param list:所有的select|update|delete|insert节点
    * @param requiredDatabaseId:判断有没有数据库厂商Id
-   * @return:
-   * @exception:
    */
   private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
     // 循环我们的select|delete|insert|update节点

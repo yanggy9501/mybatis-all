@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -77,13 +77,6 @@ public class DefaultSqlSession implements SqlSession {
 
   /**
    * 方法实现说明:查询我们单个对象
-   *
-   * @author:xsls
-   * @param statement:我们的statementId
-   * @param parameter:调用时候的参数
-   * @return: T 返回结果
-   * @exception:
-   * @date:2019/9/9 20:26
    */
   @Override
   public <T> T selectOne(String statement, Object parameter) {
@@ -162,7 +155,7 @@ public class DefaultSqlSession implements SqlSession {
 
   /**
    * 查询我们的集合
-   * @param statement 用于去匹配我们Configuration对象中的mappedStatment对象
+   * @param statement 用于去匹配我们Configuration对象中的mappedStatement对象
    * @param parameter 调用的参数对象
    * @param <E>
    * @return
@@ -179,9 +172,6 @@ public class DefaultSqlSession implements SqlSession {
    * @param statement: statementId
    * @param parameter:参数对象
    * @param rowBounds :mybatis 的逻辑分页对象
-   * @return:
-   * @exception:
-   * @date:2019/9/9 20:33
    */
   @Override
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
@@ -194,7 +184,7 @@ public class DefaultSqlSession implements SqlSession {
       /*
        * 通过执行器去执行我们的sql对象
        * 第一步:包装我们的集合类参数
-       * 第二步:一般情况下是executor为cacheExetory对象
+       * 第二步:一般情况下是executor为CachingExecutor对象
        */
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
@@ -377,11 +367,6 @@ public class DefaultSqlSession implements SqlSession {
 
   /**
    * 方法实现说明:包装我们集合类的参数
-   * @author:xsls
-   * @param object:参数对象
-   * @return:Object：包装后的对象
-   * @exception:
-   * @date:2019/9/9 20:36
    */
   private Object wrapCollection(final Object object) {
     //若我们的参数类型是Collection

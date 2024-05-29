@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,16 +29,13 @@ import java.util.List;
 
 
 /**
-* @vlog: 高于生活，源于生活
-* @desc: 类的描述:sql执行器接口,主要用于维护一级缓存和二级缓存,并且提供事务管理功能
+*  类的描述:sql执行器接口,主要用于维护一级缓存和二级缓存,并且提供事务管理功能
  *        Executor
  *          --BaseExecutor(一级缓存)
  *            --batchExecutor(批量执行器)
  *            --ReUseExecutor(可重用的)
  *            --SimpleExecutor简单的
  *          --CacheExecutor(加入了二级缓存)
-* @author: xsls
-* @createDate: 2019/9/9 19:40
 * @version: 1.0
 */
 public interface Executor {

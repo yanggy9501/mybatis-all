@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -90,6 +90,7 @@ public class BatchExecutor extends BaseExecutor {
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameterObject, rowBounds, resultHandler, boundSql);
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
+      //设置参数
       handler.parameterize(stmt);
       return handler.query(stmt, resultHandler);
     } finally {

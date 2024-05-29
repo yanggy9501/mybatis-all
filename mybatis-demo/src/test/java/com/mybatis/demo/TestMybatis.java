@@ -20,7 +20,6 @@ public class TestMybatis {
     @Test
     public void test01() throws IOException {
         String resource = "mybatis-config.xml";
-        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
         // 将XML配置文件构建为Configuration配置类
         Reader reader = Resources.getResourceAsReader(resource);
         // 通过加载配置文件流构建一个SqlSessionFactory   解析xml文件  1
@@ -37,6 +36,22 @@ public class TestMybatis {
 
         Object rs = session.selectOne("com.mybatis.demo.mapper.UserMapper.selectById", 5);
         System.out.println(rs);
+        session.close();
+    }
+
+    @Test
+    public void testQuery1() throws IOException {
+        String resource = "mybatis-config.xml";
+        // 将XML配置文件构建为Configuration配置类
+        Reader reader = Resources.getResourceAsReader(resource);
+        // 通过加载配置文件流构建一个SqlSessionFactory   解析xml文件  1
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        // 数据源 执行器 DefaultSqlSession 2 + 自动提交事务
+        SqlSession session = sqlSessionFactory.openSession(true);
+
+        Object rs = session.selectOne("com.mybatis.demo.mapper.UserMapper.selectById", 1);
+        System.out.println(rs);
+        session.close();
     }
 
     @Test

@@ -8,6 +8,14 @@ public class Dept {
 
     private String deptName;
 
+    public Dept() {
+
+    }
+
+    public Dept(String deptName) {
+        this.deptName = deptName;
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class GenericTokenParser {
           builder.append(src, start, src.length - start);
           offset = src.length;
         } else {
-          // 返回?  解析参数ParameterMapping 和参数的类型处理器
+          // 返回? 解析参数 ParameterMapping 和参数的类型处理器
           builder.append(handler.handleToken(expression.toString()));
           offset = end + closeToken.length();
         }

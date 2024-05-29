@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -165,7 +165,7 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
-    // <2> 清空本地缓存，如果 queryStack 为零，并且要求清空本地缓存。
+    // <2> 清空本地缓存，如果 queryStack 为零（一次会话中第一次查询，清空先前的缓存），并且要求清空本地缓存。
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
       // 清空本地缓存查询之后就刷新：select 查询标签的 flushCache="true" 进行配置
       // 注意：等到当前正在执行的 sql 执行完才刷新（一个查询标签的查询执行完）
