@@ -53,8 +53,6 @@ public class MapperProxyFactory<T> {
    * 方法实现说明: 创建 Mapper 接口代理
    *
    * @param sqlSession:sqlSessionTemplate
-   * @return:
-   * @exception:
    */
   public T newInstance(SqlSession sqlSession) {
      // 创建我们的代理对象

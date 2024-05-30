@@ -272,7 +272,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
     /**
-     * 通过MapperStatment的构建器构建对象
+     * 通过MapperStatement的构建器构建对象
      */
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType)
         .resource(resource)

@@ -15,23 +15,19 @@
  */
 package org.apache.ibatis.builder.xml;
 
-import java.util.List;
-import java.util.Locale;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
+
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Clinton Begin
@@ -66,11 +62,11 @@ public class XMLStatementBuilder extends BaseBuilder {
 
   public void parseStatementNode() {
     /**
-     * 我们的insert|delte|update|select 语句的sqlId
+     * 我们的insert|delete|update|select 语句的sql Id
      */
     String id = context.getStringAttribute("id");
     /**
-     * 判断我们的insert|delte|update|select  节点是否配置了
+     * 判断我们的insert|delete|update|select  节点是否配置了
      * 数据库厂商标注
      */
     String databaseId = context.getStringAttribute("databaseId");
@@ -132,9 +128,9 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     /**
      * 查看sql是否支撑自定义语言
-     * <delete id="delEmployeeById" parameterType="int" lang="tulingLang">
+     * <delete id="delEmployeeById" parameterType="int" lang="xxxLang">
      <settings>
-          <setting name="defaultScriptingLanguage" value="tulingLang"/>
+          <setting name="defaultScriptingLanguage" value="xxxLang"/>
      </settings>
      */
     String lang = context.getStringAttribute("lang");
@@ -161,7 +157,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String keyStatementId = id + SelectKeyGenerator.SELECT_KEY_SUFFIX;
     /**
      * 把我们的命名空间拼接到keyStatementId中
-     * com.tuling.mapper.Employee.saveEmployee!selectKey
+     * com.xxx.mapper.Employee.saveEmployee!selectKey
      */
     keyStatementId = builderAssistant.applyCurrentNamespace(keyStatementId, true);
     /**
@@ -187,7 +183,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     /**
      * 通过class org.apache.ibatis.scripting.xmltags.XMLLanguageDriver来解析我们的
-     * sql脚本对象  .  解析SqlNode. 注意， 只是解析成一个个的SqlNode， 并不会完全解析sql,因为这个时候参数都没确定，动态sql无法解析
+     * sql脚本对象. 解析SqlNode注意，只是解析成一个个的SqlNode，并不会完全解析sql, 因为这个时候参数都没确定，动态sql无法解析
      */
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
     /**
@@ -211,7 +207,7 @@ public class XMLStatementBuilder extends BaseBuilder {
      * 可以使用 resultType 或 resultMap，但不能同时使用
      */
     String resultType = context.getStringAttribute("resultType");
-    /**解析我们查询结果集返回的类型     */
+    /** 解析我们查询结果集返回的类型 */
     Class<?> resultTypeClass = resolveClass(resultType);
     /**
      * 外部 resultMap 的命名引用。结果集的映射是 MyBatis 最强大的特性，如果你对其理解透彻，许多复杂映射的情形都能迎刃而解。
@@ -233,7 +229,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultSets = context.getStringAttribute("resultSets");
 
     /**
-     * 为我们的insert|delete|update|select节点构建成我们的mappedStatment对象
+     * 为我们的insert|delete|update|select节点构建成我们的mappedStatement对象
      */
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,

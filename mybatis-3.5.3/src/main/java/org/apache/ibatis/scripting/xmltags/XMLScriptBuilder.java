@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.SqlSource;
@@ -28,6 +23,11 @@ import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Clinton Begin
@@ -81,12 +81,12 @@ public class XMLScriptBuilder extends BaseBuilder {
       //    和参数ParameterMappings   也会在后续执行解析，因为动态条件肯定会有动态参数
       sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
     } else {
-      // 静态Sql源  如果没有动态标签(<if>、<where>等) 以及 没有${}  就是静态Sql源
-      // 静态Sql 就是在这里就解析了Sql  和参数ParameterMappings   后续执行就不用解析了
+      // 静态Sql源  如果没有动态标签(<if>、<where>等) 以及没有${} 就是静态Sql源
+      // 静态Sql 就是在这里就解析了Sql 和参数ParameterMappings 后续执行就不用解析了
       sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
     }
     // 其实他们的区别就是动态sql 需要在查询的时候解析 因为有动态sql 和拼接${}
-    //                  静态sql 已经在这里确定好sql. 和参数ParameterMapping,
+    // 静态sql 已经在这里确定好sql. 和参数ParameterMapping,
     return sqlSource;
   }
   // 解析${} 和 动态节点
