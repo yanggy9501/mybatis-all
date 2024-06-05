@@ -32,6 +32,7 @@ import java.util.List;
 /**
  * @author Clinton Begin
  */
+// 路由语句处理器，直接实现了 StatementHandler 接口，作用如其名称，确确实实只是起到了路由功能，并把其他的三个语句处理器实例作为自身的委托对象而已
 public class RoutingStatementHandler implements StatementHandler {
 
   private final StatementHandler delegate;

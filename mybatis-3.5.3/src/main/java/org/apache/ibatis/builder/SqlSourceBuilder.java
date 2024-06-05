@@ -40,10 +40,13 @@ public class SqlSourceBuilder extends BaseBuilder {
   }
 
   public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
+    // 创建分词解析器
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     // 替换sql中的#{} 替换成问号 ？并且会顺便拿到 #{} 中的参数名解析成 ParameterMapping
     String sql = parser.parse(originalSql);
+    // 将解析之后的SQL信息，封装到StaticSqlSource对象中
+    // SQL字符串是带有?号的字符串，?相关的参数信息，封装到ParameterMapping集合中
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
   }
 
@@ -63,6 +66,7 @@ public class SqlSourceBuilder extends BaseBuilder {
       return parameterMappings;
     }
 
+    // 处理token（#{}/${}）
     @Override
     public String handleToken(String content) {
       parameterMappings.add(buildParameterMapping(content));

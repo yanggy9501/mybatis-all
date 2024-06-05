@@ -89,7 +89,7 @@ public class TrimSqlNode implements SqlNode {
       String trimmedUppercaseSql = sqlBuffer.toString().toUpperCase(Locale.ENGLISH); // 转换成大写
       if (trimmedUppercaseSql.length() > 0) { // 如果trim(where、set)中有内容
         /*
-         * 1. 处理prefixOverrides 前去除  如果<WHERE> prefixOverrides="and|or"
+         * 1. 处理prefixOverrides 前缀去除  如果<WHERE> prefixOverrides="and|or"
          * 2. 处理prefix 前追加 如果<WHERE>  prefix=where  如果<SET>  prefix=set
          */
         applyPrefix(sqlBuffer, trimmedUppercaseSql);

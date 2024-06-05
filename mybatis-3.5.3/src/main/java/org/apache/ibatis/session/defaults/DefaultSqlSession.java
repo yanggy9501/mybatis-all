@@ -186,6 +186,8 @@ public class DefaultSqlSession implements SqlSession {
        * 第一步:包装我们的集合类参数
        * 第二步:一般情况下是executor为CachingExecutor对象
        */
+      // RowBounds是用来逻辑分页（按照条件将数据从数据库查询到内存中，在内存中进行分页）
+      // wrapCollection(parameter)是用来装饰集合或者数组参数
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);

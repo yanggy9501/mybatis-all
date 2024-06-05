@@ -161,7 +161,7 @@ public class XMLStatementBuilder extends BaseBuilder {
      */
     keyStatementId = builderAssistant.applyCurrentNamespace(keyStatementId, true);
     /**
-     *<insert id="saveEmployee" parameterType="com.tuling.entity.Employee" useGeneratedKeys="true" keyProperty="id">
+     *<insert id="saveEmployee" parameterType="com.xxx.entity.Employee" useGeneratedKeys="true" keyProperty="id">
      *判断我们全局的配置类configuration中是否包含以及解析过的主键生成器对象
      */
     if (configuration.hasKeyGenerator(keyStatementId)) {

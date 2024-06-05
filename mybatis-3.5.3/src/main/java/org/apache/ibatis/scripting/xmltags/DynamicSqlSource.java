@@ -21,7 +21,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
 
 /**
- * 动态sql
+ * 动态sql:主要是封装动态SQL标签解析之后的SQL语句和带有${}的SQL语句
  *
  * @author Clinton Begin
  */

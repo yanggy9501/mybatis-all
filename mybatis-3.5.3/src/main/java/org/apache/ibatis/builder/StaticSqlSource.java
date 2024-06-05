@@ -23,7 +23,7 @@ import org.apache.ibatis.session.Configuration;
 import java.util.List;
 
 /**
- * 静态sql
+ * 静态sql:是BoundSql中要存储SQL语句的一个载体，上面两个SqlSource的SQL语句，最终都会存储到该SqlSource实现类
  *
  * @author Clinton Begin
  */

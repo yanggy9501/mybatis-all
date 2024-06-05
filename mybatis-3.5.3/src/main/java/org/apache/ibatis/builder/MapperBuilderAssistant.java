@@ -32,13 +32,7 @@ import java.util.*;
 /**
  * @author Clinton Begin
  */
-/**
-* @vlog: 高于生活，源于生活
-* @desc: 类的描述:Mapper对象构建的辅助类
-* @author: xsls
-* @createDate: 2019/9/5 21:47
-* @version: 1.0
-*/
+// Mapper对象构建的辅助类
 public class MapperBuilderAssistant extends BaseBuilder {
 
   /**

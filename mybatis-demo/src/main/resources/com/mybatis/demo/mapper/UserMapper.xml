@@ -22,9 +22,9 @@
     <resultMap id="result" type="com.mybatis.demo.entity.User">
         <!-- 每一条就是一个 resultMapping -->
         <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="username"  property="username"/>
         <result column="roles" jdbcType="VARCHAR" property="roles" typeHandler="com.mybatis.demo.handler.StringWithCommaToListTypeHandler"/>
-        <result column="create_time" jdbcType="DATE" property="createTime"/>
+        <result column="create_time" property="createTime"/>
         <!--<collection property="" select=""-->
     </resultMap>
 

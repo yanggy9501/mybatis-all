@@ -47,6 +47,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     super(configuration);
     this.context = context;
     this.parameterType = parameterType;
+    // 初始化动态SQL中的节点处理器集合
     initNodeHandlerMap();
   }
 
@@ -64,6 +65,10 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   public SqlSource parseScriptNode() {
+    // 解析select\insert\update\delete标签中的SQL语句，最终将解析到的SqlNode封装到MixedSqlNode中的List集合中
+    // 将带有${}号的SQL信息封装到TextSqlNode
+    // 将带有#{}号的SQL信息封装到StaticTextSqlNode
+    // 将动态SQL标签中的SQL信息分别封装到不同的SqlNode中
     /**
      * 递归解析-组合设计模式  selectById这个sql元素会解析成
      *    1层  MixedSqlNode <SELECT>
@@ -82,32 +87,41 @@ public class XMLScriptBuilder extends BaseBuilder {
       sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
     } else {
       // 静态Sql源  如果没有动态标签(<if>、<where>等) 以及没有${} 就是静态Sql源
-      // 静态Sql 就是在这里就解析了Sql 和参数ParameterMappings 后续执行就不用解析了
+      // 静态Sql 就是在这里就解析了Sql 和 参数ParameterMappings 后续执行就不用解析了，#{} --> ?
       sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
     }
     // 其实他们的区别就是动态sql 需要在查询的时候解析 因为有动态sql 和拼接${}
     // 静态sql 已经在这里确定好sql. 和参数ParameterMapping,
     return sqlSource;
   }
-  // 解析${} 和 动态节点
+
+  // 解析select\insert\update\delete标签中的SQL语句，最终将解析到的SqlNode封装到MixedSqlNode中的List集合中()解析${} 和 动态节点
   protected MixedSqlNode parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<>();
+
+    // 获取<select>\<insert>等4个标签的子节点，子节点包括元素节点和文本节点
     NodeList children = node.getNode().getChildNodes();  //获得<select>的子节点
     for (int i = 0; i < children.getLength(); i++) {
       XNode child = node.newXNode(children.item(i));
+      // 处理文本节点
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody(""); // 获得sql文本
         TextSqlNode textSqlNode = new TextSqlNode(data);
+        // SQL语句中带有${}的话，就表示是dynamic的
         if (textSqlNode.isDynamic()) {  // 怎样算Dynamic? 其实就是判断sql文本中有${}
           contents.add(textSqlNode);
           isDynamic = true;
         } else {
+          // SQL语句中（除了${}和下面的动态SQL标签），就表示是static的
+          // StaticTextSqlNode的apply只是进行字符串的追加操作
           contents.add(new StaticTextSqlNode(data));  //静态文本
         }
+      // 处理元素节点
       } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628
+        // 动态SQL标签处理器 --- 策略模式
         String nodeName = child.getNode().getNodeName();
 
-        /*** 判断当前节点是不是动态sql节点{@link XMLScriptBuilder#initNodeHandlerMap()}*/
+        /*** 判断当前节点是不是动态标签sql节点{@link XMLScriptBuilder#initNodeHandlerMap()}*/
         NodeHandler handler = nodeHandlerMap.get(nodeName);
         if (handler == null) {
           throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");

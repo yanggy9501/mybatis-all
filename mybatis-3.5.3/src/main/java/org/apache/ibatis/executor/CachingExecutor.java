@@ -100,7 +100,7 @@ public class CachingExecutor implements Executor {
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
       throws SQLException {
     /*
-     * 判断我们我们的mapper中是否开启了二级缓存<cache></cache>
+     * 判断我们我们的mapper中是否开启了二级缓存<cache></cache>（二级缓存）
      */
     Cache cache = ms.getCache();
 
@@ -108,19 +108,23 @@ public class CachingExecutor implements Executor {
      * 判断是否配置了<cache></cache>
      */
     if (cache != null) {
-      //判断是否需要刷新缓存
+      // 判断是否需要刷新缓存
+      // 当为select语句时，flushCache默认为false，表示任何时候语句被调用，都不会去清空本地缓存和二级缓存
+      // 当为insert、update、delete语句时,useCache默认为true，表示会将本条语句的结果进行二级缓存
+      // 刷新二级缓存 （存在缓存且flushCache为true时）
       flushCacheIfRequired(ms);
       if (ms.isUseCache() && resultHandler == null) {
         ensureNoOutParams(ms, boundSql);
         /*
-         * 先去二级缓存中获取
+         * 从二级缓存中查询数据
          */
         @SuppressWarnings("unchecked")
         List<E> list = (List<E>) tcm.getObject(cache, key);
         /*
-         * 二级缓存中没有获取到
+         * 如果二级缓存中没有查询到数据，则查询数据库
          */
         if (list == null) {
+          // 委托给BaseExecutor执行
           //通过查询数据库去查询
           list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
           //加入到二级缓存中
@@ -129,7 +133,7 @@ public class CachingExecutor implements Executor {
         return list;
       }
     }
-    //没有整合二级缓存,直接去查询
+    // 委托给BaseExecutor执行
     return delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 

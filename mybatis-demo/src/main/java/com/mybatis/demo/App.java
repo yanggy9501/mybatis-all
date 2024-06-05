@@ -22,7 +22,7 @@ public class App {
         SqlSession session = sqlSessionFactory.openSession();
         try {
             // 执行查询 底层执行jdbc 3
-//            User user =  session.selectOne("com.mybatis.demo.mapper.UserMapper.selectById", 2011);
+            User user1 =  session.selectOne("com.mybatis.demo.mapper.UserMapper.selectById", 2011);
 
             // 创建动态代理
             UserMapper mapper = session.getMapper(UserMapper.class);
