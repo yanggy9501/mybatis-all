@@ -168,7 +168,6 @@ public class DefaultSqlSession implements SqlSession {
   /**
    * 方法实现说明
    *
-   * @author:xsls
    * @param statement: statementId
    * @param parameter:参数对象
    * @param rowBounds :mybatis 的逻辑分页对象
