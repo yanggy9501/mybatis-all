@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   public SqlSource parseScriptNode() {
-    // 解析select\insert\update\delete标签中的SQL语句，最终将解析到的SqlNode封装到MixedSqlNode中的List集合中
+    // 解析select|insert|update|delete标签中的SQL语句，最终将解析到的SqlNode封装到MixedSqlNode中的List集合中
     // 将带有${}号的SQL信息封装到TextSqlNode
     // 将带有#{}号的SQL信息封装到StaticTextSqlNode
     // 将动态SQL标签中的SQL信息分别封装到不同的SqlNode中
@@ -95,11 +95,11 @@ public class XMLScriptBuilder extends BaseBuilder {
     return sqlSource;
   }
 
-  // 解析select\insert\update\delete标签中的SQL语句，最终将解析到的SqlNode封装到MixedSqlNode中的List集合中()解析${} 和 动态节点
+  // 解析select|insert|update|delete标签中的SQL语句，最终将解析到的SqlNode封装到MixedSqlNode中的List集合中()解析${} 和 动态节点
   protected MixedSqlNode parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<>();
 
-    // 获取<select>\<insert>等4个标签的子节点，子节点包括元素节点和文本节点
+    // 获取<select><insert>等4个标签的子节点，子节点包括元素节点和文本节点
     NodeList children = node.getNode().getChildNodes();  //获得<select>的子节点
     for (int i = 0; i < children.getLength(); i++) {
       XNode child = node.newXNode(children.item(i));
