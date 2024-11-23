@@ -63,11 +63,8 @@ public class MapperMethod {
   /**
    * 方法实现说明:执行我们的目标方法
    *
-   * @author:sqlSession:我们的sqlSessionTemplate
-   * @param args:方法参数
-   * @return:Object
+   * @param: sqlSession: 我们的sqlSessionTemplate
    * @exception:
-   * @date:2019/9/8 15:43
    */
   public Object execute(SqlSession sqlSession, Object[] args) {
     Object result;
@@ -112,10 +109,10 @@ public class MapperMethod {
           Object param = method.convertArgsToSqlCommandParam(args);
           /*
            * 通过调用sqlSessionTemplate来执行我们的sql
-           * 第一步:获取我们的statmentName(com.tuling.mapper.EmployeeMapper.findOne)
+           * 第一步:获取我们的statementName
            * 然后我们就需要重点研究下SqlSessionTemplate是怎么来的?
            * 在mybatis和spring整合的时候，我们偷天换日了我们mapper接口包下的所有的
-           * beandefinition改成了MapperFactoryBean类型的
+           * beanDefinition改成了MapperFactoryBean类型的
            * MapperFactoryBean<T> extends SqlSessionDaoSupport的类实现了SqlSessionDaoSupport
            * 那么就会调用他的setXXX方法为我们的sqlSessionTemplate赋值
            *

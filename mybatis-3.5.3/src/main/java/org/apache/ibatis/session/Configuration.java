@@ -81,7 +81,7 @@ import java.util.function.BiFunction;
  */
 public class Configuration {
   /**
-   * 环境
+   * 环境 <environments>
    */
   protected Environment environment;
 
@@ -153,7 +153,7 @@ public class Configuration {
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
 
   /**
-   * 插件的链
+   * 插件的链 plugins>
    */
   protected final InterceptorChain interceptorChain = new InterceptorChain();
 

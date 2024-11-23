@@ -1,5 +1,6 @@
 package com.mybatis.demo;
 
+import com.mybatis.demo.entity.Dept;
 import com.mybatis.demo.entity.User;
 import com.mybatis.demo.mapper.UserMapper;
 import org.apache.ibatis.io.Resources;

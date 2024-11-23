@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * mapper.xml 中 sql 标签的解析结果封装
+ * mapper.xml 中 sql 标签的解析结果封装，如: <select id="xxx">select * from tb</select>
  *
  * @author Clinton Begin
  */
