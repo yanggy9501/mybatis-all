@@ -76,7 +76,8 @@ public class MapperRegistry {
   }
 
   /**
-   * 把我们的 Mapper class保存到我们的 knownMappers map 中
+   * mapper 接口解析
+   * 把我们的 Mapper class 保存到我们的 knownMappers map 中
    * @param type:我们的Mapper接口
    * @return:
    * @exception:

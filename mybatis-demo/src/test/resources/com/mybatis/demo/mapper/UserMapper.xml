@@ -36,7 +36,7 @@
         timeout：单位毫秒
     -->
     <insert id="insert" useGeneratedKeys="true"
-            timeout="1000>
+            timeout="1000">
         -- 文本 TextSqlNode
         insert into `user` values (null, #{username}, #{roles, typeHandler=com.mybatis.demo.handler.StringWithCommaToListTypeHandler},#{createTime})
     </insert>

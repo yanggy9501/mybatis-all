@@ -28,7 +28,7 @@
         <typeHandler handler="com.mybatis.demo.handler.StringWithCommaToListTypeHandler" />
     </typeHandlers>
 
-    <!-- 插件配置 -->
+    <!-- 插件配置：通过代理 Executor 实现 -->
    <plugins>
 <!--       <plugin interceptor="com.mybatis.demo.plugins.ExamplePlugin" />-->
        <plugin interceptor="com.mybatis.demo.plugins.SqlCostTimeInterceptor" />

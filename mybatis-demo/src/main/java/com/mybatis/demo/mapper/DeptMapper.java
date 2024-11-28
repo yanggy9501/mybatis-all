@@ -4,6 +4,7 @@ import com.mybatis.demo.entity.Dept;
 
 import java.util.List;
 
+// MapperProxy
 public interface DeptMapper {
 
     Integer insertDept(Dept dept);
