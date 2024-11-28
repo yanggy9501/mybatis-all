@@ -34,7 +34,7 @@ import java.util.List;
  *          --BaseExecutor(一级缓存)
  *            --batchExecutor(批量执行器)
  *            --ReUseExecutor(可重用的)
- *            --SimpleExecutor简单的
+ *            --SimpleExecutor 简单的执行器，使用时创建，使用完就关闭（Statement不复用）
  *          --CacheExecutor(加入了二级缓存)
 * @version: 1.0
 */

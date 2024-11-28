@@ -60,6 +60,7 @@ public class SimpleExecutor extends BaseExecutor {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
+      // 在这一步添加 插件
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
       // 拿到连接和statement
       stmt = prepareStatement(handler, ms.getStatementLog());

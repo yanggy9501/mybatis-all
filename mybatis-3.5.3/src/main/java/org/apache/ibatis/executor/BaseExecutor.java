@@ -58,7 +58,7 @@ public abstract class BaseExecutor implements Executor {
   protected PerpetualCache localCache;
   // 本地输出类型的参数的缓存
   protected PerpetualCache localOutputParameterCache;
-  // mysql全局配置文件
+  // 全局配置文件
   protected Configuration configuration;
   // 记录嵌套查询的层级
   protected int queryStack;
@@ -143,7 +143,7 @@ public abstract class BaseExecutor implements Executor {
    * @param ms 我们的执行sql包装对象（MappedStatement）
    * @param parameter:参数
    * @param rowBounds 逻辑分页参数
-   * @param resultHandler:返回结果处理器
+   * @param resultHandler:返回结果处理器 = null
    * @param <E>
    * @return
    * @throws SQLException

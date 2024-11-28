@@ -156,7 +156,7 @@ public class DefaultSqlSession implements SqlSession {
 
   /**
    * 查询我们的集合
-   * @param statement 用于去匹配我们Configuration对象中的mappedStatement对象
+   * @param statement =namespace.id 用于去匹配我们Configuration对象中的mappedStatement对象
    * @param parameter 调用的参数对象
    * @param <E>
    * @return

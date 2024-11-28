@@ -325,6 +325,12 @@ public final class MappedStatement {
     return resultSets;
   }
 
+  /**
+   * 获取绑定的 sql，动态sql已经解析过之后，完整的sql（可能还存在 ？ 的预编译sql）
+   *
+   * @param parameterObject 参数
+   * @return
+   */
   public BoundSql getBoundSql(Object parameterObject) {
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();

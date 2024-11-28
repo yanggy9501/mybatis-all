@@ -643,12 +643,10 @@ public class Configuration {
   /**
    * 方法实现说明:创建一个sql语句执行器对象
    *
-   * @author:xsls
    * @param transaction:事务
    * @param executorType:执行器类型
    * @return:Executor执行器对象
    * @exception:
-   * @date:2019/9/9 13:59
    */
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     executorType = executorType == null ? defaultExecutorType : executorType;
