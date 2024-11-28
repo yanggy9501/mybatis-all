@@ -93,6 +93,7 @@ public class DefaultSqlSession implements SqlSession {
 
       /*
        * 查询的有多个,那么就抛出我们熟悉的异常
+       *
        * Expected one result (or null) to be returned by selectOne(), but found: " + list.size()
        */
       throw new TooManyResultsException("Expected one result (or null) to be returned by selectOne(), but found: " + list.size());

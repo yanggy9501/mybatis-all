@@ -523,11 +523,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   /**
    * 方法实现说明
-   * @author:xsls
    * @param parent:mappers
-   * @return:
-   * @exception:
-   * @date:2019/8/30 16:32
    */
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {

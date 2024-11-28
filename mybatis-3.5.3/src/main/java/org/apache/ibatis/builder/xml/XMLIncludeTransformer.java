@@ -55,22 +55,24 @@ public class XMLIncludeTransformer {
 
   /**
    * Recursively apply includes through all SQL fragments.
-   * @param source Include node in DOM tree
+   * @param source Include node in DOM tree. 如 select|insert|delete|update|include等标签
    * @param variablesContext Current context for static variables with values
    */
   private void applyIncludes(Node source, final Properties variablesContext, boolean included) {
+    // 如果是 <include> 标签，开始时是 select 等标签走，included=false 走 else
     if (source.getNodeName().equals("include")) {
-      // 拿到之前解析的<sql>
+      // <include refid= "${sqlKey}"/> 或 <include refid= "sql1}"/> 解析，拿到之前解析的 <sql> 标签
       Node toInclude = findSqlFragment(getStringAttribute(source, "refid"), variablesContext);
+      // 解析 include 中的 <key value = "value" /> 标签成 toIncludeContext
       Properties toIncludeContext = getVariablesContext(source, variablesContext);
-      // 递归， included=true
+      // 递归 <sql><sql/></sql> sql 标签包含sql标签， 所以included=true
       applyIncludes(toInclude, toIncludeContext, true);
       if (toInclude.getOwnerDocument() != source.getOwnerDocument()) {
         toInclude = source.getOwnerDocument().importNode(toInclude, true);
       }
-      // <include的父节点=select 。  将<select>里面的<include>替换成 <sql> ，那<include>.getParentNode就为Null了
+      // <include的父节点=select 。  将<select>里面的<include/>替换成 <sql> 标签 ，那<include>.getParentNode就为Null了
       source.getParentNode().replaceChild(toInclude, source);
-      while (toInclude.hasChildNodes()) {
+      while (toInclude.hasChildNodes()) { // sql 标签包含标签
         // 接下来<sql>.getParentNode()=select.  在<sql>的前面插入<sql> 中的sql语句   ,
         toInclude.getParentNode().insertBefore(toInclude.getFirstChild(), toInclude);
       }
@@ -88,6 +90,7 @@ public class XMLIncludeTransformer {
         }
       }
       NodeList children = source.getChildNodes();
+      // 解析每个 Include 子标签
       for (int i = 0; i < children.getLength(); i++) {
         // 递归
          applyIncludes(children.item(i), variablesContext, included);
@@ -101,8 +104,10 @@ public class XMLIncludeTransformer {
   }
 
   private Node findSqlFragment(String refid, Properties variables) {
-    refid = PropertyParser.parse(refid, variables);  // 解析refid 的表达式
-    refid = builderAssistant.applyCurrentNamespace(refid, true); // 获取refid的命名空间+refid
+    // 解析refid 的表达式，若存在 ${sqlName} 则返回 variables.get(sqlName)的值
+    refid = PropertyParser.parse(refid, variables);
+    // 获取refid的命名空间点.上refid
+    refid = builderAssistant.applyCurrentNamespace(refid, true);
     try {
       // 拿到之前解析的<sql>
       XNode nodeToInclude = configuration.getSqlFragments().get(refid);
@@ -125,6 +130,7 @@ public class XMLIncludeTransformer {
   private Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {
     Map<String, String> declaredProperties = null;
     NodeList children = node.getChildNodes();
+    // include 标签node中可以包含任意多个 <anyTagName任意标签 value="值" /> 的标签，解析成 k-v 的 Properties并与全局的合并
     for (int i = 0; i < children.getLength(); i++) {
       Node n = children.item(i);
       if (n.getNodeType() == Node.ELEMENT_NODE) {

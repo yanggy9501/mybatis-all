@@ -623,9 +623,9 @@ User findByColumn(@Param("column") String column, @Param("value") String value);
           <code>${column}</code> は指定した文字列(カラム名)が直接代入され、<code>#{value}</code> はバインド変数として扱われるため、
           以下のように使用することができます。
           <source><![CDATA[
-User userOfId1 = userMapper.findByColumn("id", 1L);
-User userOfNameKid = userMapper.findByColumn("name", "kid");
-User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
+User userOfId1 = testInterface.findByColumn("id", 1L);
+User userOfNameKid = testInterface.findByColumn("name", "kid");
+User userOfEmail = testInterface.findByColumn("email", "noone@nowhere.com");
 ]]></source>
         </p>
 

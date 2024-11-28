@@ -633,9 +633,9 @@ User findByColumn(@Param("column") String column, @Param("value") String value);
           其中 <code>${column}</code> 会被直接替换，而 <code>#{value}</code> 会被使用 <code>?</code> 预处理。
           因此你就可以像下面这样来达到上述功能：
           <source><![CDATA[
-User userOfId1 = userMapper.findByColumn("id", 1L);
-User userOfNameKid = userMapper.findByColumn("name", "kid");
-User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
+User userOfId1 = testInterface.findByColumn("id", 1L);
+User userOfNameKid = testInterface.findByColumn("name", "kid");
+User userOfEmail = testInterface.findByColumn("email", "noone@nowhere.com");
 ]]></source>
         </p>
 

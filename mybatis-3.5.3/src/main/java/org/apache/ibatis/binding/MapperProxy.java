@@ -43,10 +43,10 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
    */
   private final SqlSession sqlSession;
 
-  /**
-   * mapper 接口类型
-   */
-  private final Class<T> mapperInterface;
+      /**
+       * mapper 接口类型
+       */
+      private final Class<T> mapperInterface;
 
   /**
    * 用于缓存我们的MapperMethod方法

@@ -194,6 +194,10 @@ public class Configuration {
    * 已经加载的资源，如 mapper 接口 对应的xml
    */
   protected final Set<String> loadedResources = new HashSet<>();
+
+  /**
+   * <sql id="xxx"></sql> sql判断，key=namespace.sqlKey
+   */
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
 
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();

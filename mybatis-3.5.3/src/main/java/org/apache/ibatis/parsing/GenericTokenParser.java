@@ -17,7 +17,8 @@ package org.apache.ibatis.parsing;
 
 /**
  * @author Clinton Begin
- * 公共令牌解析器 通常有openToken=#{   closeToken=}  、 ${}
+ * 公共令牌解析器 通常有openToken是#{  和 closeToken 是}，如： ${name}
+ * 解析器负责解析出  ${name} 中的 name，而 TokenHandler 负责将 name 进行替换
  */
 public class GenericTokenParser {
 
@@ -31,6 +32,10 @@ public class GenericTokenParser {
     this.handler = handler;
   }
 
+  /**
+   * @param text 如 #{name} 被替换后的完整字符串
+   * @return
+   */
   public String parse(String text) {
     if (text == null || text.isEmpty()) {
       return "";
@@ -46,7 +51,7 @@ public class GenericTokenParser {
     StringBuilder expression = null;
     while (start > -1) {
       if (start > 0 && src[start - 1] == '\\') {
-        // this open token is escaped. remove the backslash and continue.
+        // this open token is escaped. remove the backslash and continue.此 Open Token 已转义。删除反斜杠并继续
         builder.append(src, offset, start - offset - 1).append(openToken);
         offset = start + openToken.length();
       } else {

@@ -72,10 +72,11 @@ public class XMLScriptBuilder extends BaseBuilder {
     /**
      * 递归解析-组合设计模式  selectById这个sql元素会解析成
      *    1层  MixedSqlNode <SELECT>
-     *    2层  WhereSqlNode <WHERE>
+     *    2层  WhereSqlNode <WHERE>    where 标签中的内容包装 MixedSqlNode，因为标签里面可以有标签，其他标签也如此
      *    3层  IfSqlNode <IF>
      *       test="条件表达式"
-     *
+     *    ... 其他标签 foreach 等
+     * 整体构成 SqlSource
      *  contexts= sql语句分： 1.TextSqlNode 带${}   2.StaticTextSqlNode
      */
     MixedSqlNode rootSqlNode = parseDynamicTags(context);
@@ -220,7 +221,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 
     @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
-      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle); //递归解析
+      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle); //递归解析（标签里面还有标签）
       String test = nodeToHandle.getStringAttribute("test"); // 得到表达式
       IfSqlNode ifSqlNode = new IfSqlNode(mixedSqlNode, test);
       targetContents.add(ifSqlNode);

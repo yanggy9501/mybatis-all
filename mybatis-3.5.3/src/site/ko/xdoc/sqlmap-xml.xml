@@ -534,9 +534,9 @@ User findByColumn(@Param("column") String column, @Param("value") String value);
           in which the <code>${column}</code> will be substituted directly and the <code>#{value}</code> will be "prepared".
           Thus you can just do the same work by:
           <source><![CDATA[
-User userOfId1 = userMapper.findByColumn("id", 1L);
-User userOfNameKid = userMapper.findByColumn("name", "kid");
-User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
+User userOfId1 = testInterface.findByColumn("id", 1L);
+User userOfNameKid = testInterface.findByColumn("name", "kid");
+User userOfEmail = testInterface.findByColumn("email", "noone@nowhere.com");
 ]]></source>
         </p>
 

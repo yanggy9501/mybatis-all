@@ -21,6 +21,7 @@ package org.apache.ibatis.mapping;
  *
  * @author Clinton Begin
  */
+// 表示从 XML 文件或注释中读取的映射语句的内容。代表一个 insert、select等标签
 public interface SqlSource {
 
   /**

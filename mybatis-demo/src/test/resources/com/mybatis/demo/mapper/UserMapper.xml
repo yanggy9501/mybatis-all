@@ -28,12 +28,49 @@
         <!--<collection property="" select=""-->
     </resultMap>
 
-    <insert id="insert">
+    <!--
+        每个 insert|select 等标签就是一个 SqlSource，标签-sqlNode， 下面DynamicSqlSource：动态sql:主要是封装动态SQL标签解析之后的SQL语句和带有${}的SQL语句
+        解析完成封装成 MappedStatement，其包含所有信息
+    -->
+    <!--
+        timeout：单位毫秒
+    -->
+    <insert id="insert" useGeneratedKeys="true"
+            timeout="1000>
+        -- 文本 TextSqlNode
         insert into `user` values (null, #{username}, #{roles, typeHandler=com.mybatis.demo.handler.StringWithCommaToListTypeHandler},#{createTime})
     </insert>
 
     <select id="selectById" resultMap="result"  >
         select id, username, roles, create_time from user
+--         <ifxxx >... 随意标签在解析时会报错，因为找不到该标签处理器 </ifxxx>
+        <where>
+            <if test="id > 0">
+                and id=#{id}
+            </if>
+        </where>
+    </select>
+
+    <!-- sql 片段 -->
+    <sql id="userFiledSql">
+        id, username, roles, create_time <!--、${<properties解析到的内容>}-->
+    </sql>
+
+    <!--
+        若在 mybatis-config.xml 中添加
+        <property name="sqlKey1" value="userFiledSql"/>
+    -->
+    <select id="selectById2" resultMap="result"  >
+        select
+-- 可以使用占位符号               <include refid="${sqlKey1}" />
+-- 可以使用其他mapper.xml 中的    <include refid="otherNamespace.sqlId1" />
+<!--可以使用其他mapper.xml 中的-->
+<!--        <include refid="${otherNamespace}.sqlId1">-->
+<!--            <k1 value="v1" ${otherNamespace}可以去标签的value值 />-->
+<!--            <k2 value="v2" />-->
+<!--        </include>-->
+--             <include refid="userFiledSql" />
+            from user
         <where>
             <if test="id > 0">
                 and id=#{id}

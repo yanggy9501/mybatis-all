@@ -29,7 +29,7 @@ public class DynamicSqlSource implements SqlSource {
 
   private final Configuration configuration;
   /**
-   * SQL 节点，if、where、Trim标签，以及标签的内容等等
+   * SQL 节点，if、where、Trim标签，以及标签的内容等等，一般是 MixedSqlNode
    */
   private final SqlNode rootSqlNode;
 

@@ -28,6 +28,10 @@ public class IfSqlNode implements SqlNode {
    * 条件：a != null and a !=''
    */
   private final String test;
+
+  /**
+   * if 标签中的 “内容”
+   */
   private final SqlNode contents;
 
   public IfSqlNode(SqlNode contents, String test) {

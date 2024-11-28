@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * @author Eduardo Macarron
  */
-// 结果集映射处理去
+// 结果集映射处理器
 public class ResultMapResolver {
   private final MapperBuilderAssistant assistant;
   private final String id;
