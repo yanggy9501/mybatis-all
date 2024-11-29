@@ -56,11 +56,11 @@ public abstract class BaseExecutor implements Executor {
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
   // 一级缓存
   protected PerpetualCache localCache;
-  // 本地输出类型的参数的缓存
+  // 本地输出类型的参数的缓存（结果）
   protected PerpetualCache localOutputParameterCache;
   // 全局配置文件
   protected Configuration configuration;
-  // 记录嵌套查询的层级
+  // 记录嵌套查询的层级（如：嵌套对象时候，子对象使用嵌套查询，则可能有多次的嵌套查询）
   protected int queryStack;
   // 是否关闭
   private boolean closed;

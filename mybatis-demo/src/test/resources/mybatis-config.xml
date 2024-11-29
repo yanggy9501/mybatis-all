@@ -13,6 +13,9 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <!-- 选用slf4j的日志门面，门面模式自动找日志的实现 -->
         <setting name="logImpl" value="SLF4J"/>
+
+        <!-- cacheEnabled是二是级缓存的总开关，置为false代表关闭二级缓存 -->
+        <setting name="cacheEnabled" value="true"/>
     </settings>
 
     <!-- 别名指定 -->

@@ -71,7 +71,7 @@ public final class MappedStatement {
   private SqlSource sqlSource;
 
   /**
-   * 该 SQL 查询结果的缓存
+   * 该 SQL 查询结果的缓存（二级缓存）
    */
   private Cache cache;
   private ParameterMap parameterMap;
