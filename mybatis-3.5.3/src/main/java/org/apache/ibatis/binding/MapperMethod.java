@@ -264,13 +264,11 @@ public class MapperMethod {
 
     /**
      * 方法实现说明:创建的SqlCommand
-     * @author:xsls
      * @param configuration：mybatis的全局配置
      * @param mapperInterface:我们Mapper接口的class类型
      * @param method:方法对象
      * @return:
      * @exception:
-     * @date:2019/9/6 21:51
      */
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       // 获取我们的方法的名称
@@ -307,14 +305,11 @@ public class MapperMethod {
 
     /**
      * 方法实现说明:解析我们的 MappedStatement(增删改查标签的解析结果) 对象
-     * @author:xsls
      * @param mapperInterface:我们mapper接口的class类型
      * @param methodName :方法名称
      * @param declaringClass:方法所在类的接口
      * @param configuration:mybatis的全局配置
      * @return: MappedStatement
-     * @exception:
-     * @date:2019/9/8 13:29
      */
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
@@ -363,13 +358,11 @@ public class MapperMethod {
 
     /**
      * 方法实现说明:方法签名对象
-     * @author:xsls
-     * @param configuration:mybaits的全局配置类
+     * @param configuration:mybatis的全局配置类
      * @param mapperInterface:我们mapper接口的class
      * @param method:接口方法调用对象
      * @return:
      * @exception:
-     * @date:2019/9/8 13:45
      */
     public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
       // 解析方法的返回值类型
